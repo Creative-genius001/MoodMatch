@@ -4,11 +4,14 @@ import { requestAccessToken } from "@/api/auth";
 import GeneratePlaylistPage from "@/components/GeneratePlaylistPage";
 import { redirect, useSearchParams } from "next/navigation";
 import React from "react";
+import { useStore } from "./store/store";
 
 
 export default function Home() {
 
   const searchParams = useSearchParams()
+    const { loading } = useStore();
+    console.log(loading)
 
   React.useEffect(()=>{ 
     const state = searchParams.get('state')
@@ -16,7 +19,6 @@ export default function Home() {
     const data = localStorage.getItem('atk')
 
     
-
     if(data) {
       const spotifyData = JSON.parse(data)
       // getRefreshToken()

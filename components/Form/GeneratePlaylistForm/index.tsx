@@ -1,33 +1,54 @@
 'use client'
 
 import { getSongRecommendation } from "@/api/AI";
+import { useStore } from "@/app/store/store";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 
 const GeneratePlaylistForm = () => {
 
+    const { setLoading, setPlaylist, setPlaylistDescription, setPlaylistName } = useStore()
 
-    const form = useForm();
-    function BtnClicked (e){
-        e.preventDefault()
-        getSongRecommendation()
+    type FormProp = {
+        playlistDescription: string,
+        genre: string
+    }
+
+    const form = useForm({
+        defaultValues: {
+            playlistDescription: '',
+            genre: ''
+        }
+    });
+    
+    async function onSubmit (values: FormProp){
+        setLoading(true)
+        try {
+            const playlist = await getSongRecommendation(values.playlistDescription, values.genre);
+            setLoading(false)
+            setPlaylist(playlist.songs)
+            setPlaylistName(playlist.playlistName)
+            setPlaylistDescription(playlist.playlistDescription)
+        } catch (error) {
+            setLoading(false)
+            console.error('error fetching songs', error)
+        }
     }
 
   return (
     <div className='w-full'>
         <Form {...form}>
-            <form className=''>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                     control={form.control}
-                    name="..."
-                    render={() => (
+                    name='playlistDescription'
+                    render={({ field }) => (
                     <FormItem>
                         <FormLabel className='text-md'>What kind of vibe do you want to go for?</FormLabel>
                         <FormControl>
-                            <Textarea className="resize-none w-full h-[120px] py-3 text-lg" placeholder='' />
+                            <Textarea className="resize-none w-full h-[120px] py-3 text-lg" placeholder='' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -36,42 +57,19 @@ const GeneratePlaylistForm = () => {
                 />
                   <FormField
                     control={form.control}
-                    name="..."
-                    render={() => (
+                    name="genre"
+                    render={({ field }) => (
                     <FormItem className='mt-6'>
                         <FormLabel className='text-md '>What kind of genre are you insterested in listening to?</FormLabel>
                         <FormControl>
-                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='' />
+                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                     
                     )}
                 />
-                {/* <FormField
-                    control={form.control}
-                    name='genre'
-                    render={({field}) => (
-                    <FormItem className='mt-4'>
-                        <FormLabel className='text-md'>Select your preferred genre</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl className="py-6">
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select a verified email to display" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                            <SelectItem value="m@example.com">m@example.com</SelectItem>
-                            <SelectItem value="m@google.com">m@google.com</SelectItem>
-                            <SelectItem value="m@support.com">m@support.com</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                    
-                    )}
-                /> */}
-            <Button onClick={(e)=> BtnClicked(e)} size='lg' className='w-full mt-4 py-6' type="submit">Find my playlist</Button>
+                <Button size='lg' className='w-full mt-4 py-6' type="submit">Find my playlist</Button>
             </form>    
             </Form>
     </div>
@@ -79,3 +77,4 @@ const GeneratePlaylistForm = () => {
 }
 
 export default GeneratePlaylistForm
+
