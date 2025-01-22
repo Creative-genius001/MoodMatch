@@ -11,10 +11,12 @@ export const Navbar = () => {
                 <span className='text-2xl font-semibold cursor-pointer'>MoodMatch</span>
             </Link>
         </div>
-        <div className='shadow-md w-auto px-4 h-12 flex items-center justify-center rounded-[1rem] cursor-pointer'>
-            <SiGithub />
-            <span className='ml-3 font-medium'>Star on GIthub</span>
-        </div>
+        <Link href='https://github.com/Creative-genius001/MoodMatch'>
+          <div className='shadow-md text-gray-600 w-auto px-4 h-12 flex items-center justify-center rounded-[1rem] cursor-pointer'>
+              <SiGithub />
+              <span className='ml-3 font-medium'>Star on GIthub</span>
+          </div>
+        </Link>
     </div>
   )
 }

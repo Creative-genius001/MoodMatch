@@ -2,7 +2,9 @@
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <div className='flex w-full justify-center items-center py-10 mt-20'>
+      <p className='text-sm'>Powered by: <span className='font-bold'>MoodMatch AI</span></p>
+    </div>
   )
 }
 

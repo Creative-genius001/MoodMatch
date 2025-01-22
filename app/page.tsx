@@ -1,4 +1,5 @@
 'use client'
+
 import { requestAccessToken } from "@/api/auth";
 import GeneratePlaylistPage from "@/components/GeneratePlaylistPage";
 import { redirect, useSearchParams } from "next/navigation";
@@ -13,6 +14,8 @@ export default function Home() {
     const state = searchParams.get('state')
     const code = searchParams.get('code')
     const data = localStorage.getItem('atk')
+
+    
 
     if(data) {
       const spotifyData = JSON.parse(data)
