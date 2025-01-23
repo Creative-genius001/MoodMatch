@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export const Navbar = () => {
   return (
-    <div className='w-full h-[90px] px-4 flex justify-around items-center '>
+    <div className='w-full h-[90px] px-[5rem] flex justify-between items-center '>
         <div className='logo'>
             <Link href='/'>
                 <span className='text-2xl font-semibold cursor-pointer'>MoodMatch</span>

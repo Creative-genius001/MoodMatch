@@ -1,6 +1,5 @@
 'use client'
 
-import { getSongRecommendation } from "@/api/AI";
 import { useStore } from "@/app/store/store";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -9,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 const GeneratePlaylistForm = () => {
 
-    const { setLoading, setPlaylist, setPlaylistDescription, setPlaylistName } = useStore()
+    const { getUserRecommendation, loading } = useStore()
 
     type FormProp = {
         playlistDescription: string,
@@ -24,17 +23,7 @@ const GeneratePlaylistForm = () => {
     });
     
     async function onSubmit (values: FormProp){
-        setLoading(true)
-        try {
-            const playlist = await getSongRecommendation(values.playlistDescription, values.genre);
-            setLoading(false)
-            setPlaylist(playlist.songs)
-            setPlaylistName(playlist.playlistName)
-            setPlaylistDescription(playlist.playlistDescription)
-        } catch (error) {
-            setLoading(false)
-            console.error('error fetching songs', error)
-        }
+        getUserRecommendation(values.playlistDescription, values.genre);
     }
 
   return (
@@ -48,7 +37,7 @@ const GeneratePlaylistForm = () => {
                     <FormItem>
                         <FormLabel className='text-md'>What kind of vibe do you want to go for?</FormLabel>
                         <FormControl>
-                            <Textarea className="resize-none w-full h-[120px] py-3 text-lg" placeholder='' {...field} />
+                            <Textarea className="resize-none w-full h-[120px] py-3 text-lg" placeholder='I feel so estatic and I wanna go to the beach. I want a happy beach vibes kind of playlist' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -62,14 +51,14 @@ const GeneratePlaylistForm = () => {
                     <FormItem className='mt-6'>
                         <FormLabel className='text-md '>What kind of genre are you insterested in listening to?</FormLabel>
                         <FormControl>
-                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='' {...field} />
+                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='I want a mix of jazz and hiphop' {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                     
                     )}
                 />
-                <Button size='lg' className='w-full mt-4 py-6' type="submit">Find my playlist</Button>
+                {loading ? <Button size='lg' className='w-full mt-4 py-6' disabled><div className='loader'></div> </Button> : <Button size='lg' className='w-full mt-4 py-6' type="submit">Find my playlist</Button>}        
             </form>    
             </Form>
     </div>

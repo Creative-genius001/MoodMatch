@@ -60,7 +60,6 @@ const model = genAI.getGenerativeModel({
   systemInstruction: "You are a song playlist genrator called MoodMatch AI. If the prompt does not relate to generating a playlist, do not return an empty schema instead return just the errorMessage schema property with a  message telling the user that you can only help him/her generate a music playlist",
   generationConfig: {
     responseMimeType: "application/json",
-    // responseSchema: schema,
   },
 });
 
@@ -70,8 +69,8 @@ const schema = `Create a JSON playlist with these fields:
 - "songs": An array of songs where each has:
   - "name": string
   - "artist": string
-  - "spotifyId": string
-Ensure all fields are populated and the playlist description should be as short as possible and should be a sinlge statement.`
+  - "spotifyURI": string
+Ensure all fields are populated and the playlist description should be as short as possible and should be a sinlge statement. Let the playlist name be a bit creative too not just generic`
 
 
 // const prompt = "What is my fav food?"

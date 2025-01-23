@@ -1,6 +1,6 @@
 'use client'
 
-import { requestAccessToken } from "@/api/auth";
+import { requestAccessToken } from "@/api/spotify";
 import GeneratePlaylistPage from "@/components/GeneratePlaylistPage";
 import { redirect, useSearchParams } from "next/navigation";
 import React from "react";

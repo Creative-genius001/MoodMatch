@@ -16,7 +16,84 @@ html {
 
 .main-div{
   width: 100vw;
-  margin-top: 4rem;
+  padding: 7rem 0;
+  background-image: url('./assets/bg.svg');
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  --w:10ch;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 14px;
+  letter-spacing: var(--w);
+  width: var(--w);
+  overflow: hidden;
+  white-space: nowrap;
+  color: #fff0;
+  animation: l40 2s infinite;
+}
+.loader:before {
+  content:"Loading...";
+}
+
+@keyframes l40{
+  0%,100% {
+   text-shadow: 
+        calc( 0*var(--w)) 0 #fff,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) 0 #fff,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) 0 #fff, 
+        calc(-5*var(--w)) 0 #fff,calc(-6*var(--w)) 0 #fff,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) 0 #fff,calc(-9*var(--w)) 0 #fff;
+  }
+  9% {
+   text-shadow: 
+        calc( 0*var(--w)) 0 #fff,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) 0 #fff, 
+        calc(-5*var(--w)) 0 #fff,calc(-6*var(--w)) 0 #fff,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) 0 #fff,calc(-9*var(--w)) 0 #fff;
+  }
+  18% {
+   text-shadow: 
+        calc( 0*var(--w)) 0 #fff,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) 0 #fff, 
+        calc(-5*var(--w)) 0 #fff,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) 0 #fff,calc(-9*var(--w)) 0 #fff;
+  }
+  27% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) 0 #fff, 
+        calc(-5*var(--w)) 0 #fff,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) 0 #fff,calc(-9*var(--w)) 0 #fff;
+  }
+  36% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) 0 #fff, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) 0 #fff,calc(-9*var(--w)) 0 #fff;
+  }
+  45% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) 0 #fff, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) -20px #fff0,calc(-9*var(--w)) 0 #fff;
+  }
+  54% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) -20px #fff0, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) -20px #fff0,calc(-9*var(--w)) 0 #fff;
+  }
+  63% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) 0 #fff,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) -20px #fff0, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) -20px #fff0,calc(-9*var(--w)) -20px #fff0;
+  }
+  72% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) -20px #fff0,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) -20px #fff0, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) 0 #fff,calc(-8*var(--w)) -20px #fff0,calc(-9*var(--w)) -20px #fff0;
+  }
+  81% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) -20px #fff0,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) 0 #fff,calc(-4*var(--w)) -20px #fff0, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) -20px #fff0,calc(-8*var(--w)) -20px #fff0,calc(-9*var(--w)) -20px #fff0;
+  }
+  90% {
+   text-shadow: 
+        calc( 0*var(--w)) -20px #fff0,calc(-1*var(--w)) -20px #fff0,calc(-2*var(--w)) -20px #fff0,calc(-3*var(--w)) -20px #fff0,calc(-4*var(--w)) -20px #fff0, 
+        calc(-5*var(--w)) -20px #fff0,calc(-6*var(--w)) -20px #fff0,calc(-7*var(--w)) -20px #fff0,calc(-8*var(--w)) -20px #fff0,calc(-9*var(--w)) -20px #fff0;
+  }
 }
 
 @layer base {

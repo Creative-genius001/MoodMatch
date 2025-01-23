@@ -1,11 +1,13 @@
 import React from 'react'
 import GeneratePlaylistForm from '../Form/GeneratePlaylistForm'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { useStore } from '@/app/store/store'
+import { Button } from '../ui/button'
+import { FaSpotify } from "react-icons/fa";
 
 const GeneratePlaylistPage = () => {
 
-  const { playlist, playlistName, playlistDescription } = useStore()
+  const { playlist, playlistName, playlistDescription, addSongsToSpotifyPlaylsit } = useStore();
 
   return (
     <div className='flex flex-col w-[40%] mx-auto justify-center items-center '>
@@ -19,7 +21,7 @@ const GeneratePlaylistPage = () => {
         </div>
         {(playlist != null) && (
           <div className='mt-8 w-[90%]'>
-          <Card className='w-full pt-4'>
+          <Card className='w-full pt-4 bg-[#ffffff77]'>
             <CardHeader>
               <CardTitle className='text-2xl'>{playlistName}</CardTitle>
               <CardDescription className='text-md leading-tight'> {playlistDescription}</CardDescription>
@@ -33,6 +35,16 @@ const GeneratePlaylistPage = () => {
                 })}
               </div>
             </CardContent>
+            <CardFooter>
+              <Button onClick={()=> {
+                console.log('clicked')
+                addSongsToSpotifyPlaylsit()
+                }}
+                className="w-full text-[#1ECF5F] bg-black flex py-6">
+                <FaSpotify />
+                <span className='ml-3'>Add playlist to spotify</span>
+              </Button>
+            </CardFooter>
           </Card>
         </div>
         )}
