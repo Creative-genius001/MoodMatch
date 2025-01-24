@@ -5,24 +5,27 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
+   import { z } from "zod"
+   import { zodResolver } from "@hookform/resolvers/zod"
 
 const GeneratePlaylistForm = () => {
 
     const { getUserRecommendation, loading } = useStore()
 
-    type FormProp = {
-        playlistDescription: string,
-        genre: string
-    }
+    const formSchema = z.object({
+        playlistDescription: z.string({required_error: "This field is required"}),
+        genre: z.string({required_error: "This field is required"})
+    })
 
-    const form = useForm({
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             playlistDescription: '',
             genre: ''
         }
     });
     
-    async function onSubmit (values: FormProp){
+    async function onSubmit (values: z.infer<typeof formSchema>){
         getUserRecommendation(values.playlistDescription, values.genre);
     }
 

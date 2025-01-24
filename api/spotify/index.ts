@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 import axios from 'axios';
 import getLocalStorage from '@/utils/getLocalStorage';
 
-const client_id = process.env.NEXT_PUBLIC_CLIENT_ID;
-const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
+const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
+const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
 const redirect_uri = 'http://localhost:3000/';
 const baseURL = 'https://accounts.spotify.com/api/token'
 
@@ -31,9 +31,7 @@ const spotifyRequestWrapper = async (method : string, url: string, data: object 
     return response.data; 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error.error.message)
-    console.log(error.error.status)
-    if (error.error && error.error.status === 401) {
+    if (error && error.status === 401) {
       console.log('Access token expired. Refreshing...');
 
       try {
@@ -91,7 +89,7 @@ export async function requestAccessToken(state: string, code: string) {
       },
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+        'Authorization': 'Basic ' + Buffer.from(`${client_id}:${client_secret}`).toString('base64'),
       },
       json: true
     };
@@ -116,20 +114,21 @@ export async function getRefreshToken () {
     const local = getLocalStorage()
     if(!local) return null
     const refreshToken = local.refresh_token;
-    const url = baseURL;
 
-    const { data } = await axios({
-        method: 'get',
-        url,
+    const authOptions = {
+        method: 'POST',
+        url: baseURL,
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+        'content-type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + Buffer.from(`${client_id}:${client_secret}`).toString('base64'),
         },
-        params: {
+        data: new URLSearchParams({
             grant_type: 'refresh_token',
-            refresh_token: refreshToken,
-            client_id
-        }
-    })
+            refresh_token: refreshToken
+        })
+    };
+
+    const { data } = await axios.request(authOptions)
 
     console.log('refresh token data',data)
     localStorage.setItem('atk', JSON.stringify(data))
@@ -185,10 +184,52 @@ export async function createPlaylist (name: string, description: string) {
 
 }
 
-export async function addSongsToPlaylist (spotifyId: string, songs: string[]) {
-    const url = `https://api.spotify.com/v1/playlists/${spotifyId}/tracks`
+export async function addSongsToPlaylist (playlistId: string, songs: string[]) {
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
     const data = {
         uris: songs,
+        position: 0
+    }
+    const additionalHeaders = {
+        'Content-Type': 'application/json',
+    }
+    try {
+        const response = await spotifyRequestWrapper('post', url, data,  additionalHeaders);
+        return (response.snapshot_id)
+    } catch (error) {
+        console.error('Error adding songs to playlist', error)
+    }
+}   
+
+
+
+const tracks = [
+    "spotify:track:2YoHXDX39wVHAz2Ym4mOEA",
+    "spotify:track:1n1jOaL7w3zfoE1nbbP1iW",
+    "spotify:track:0NIfwBqfHHX7XOCW7sUuTD",
+    "spotify:track:1jJci4qxiYcOHhQRcTxdeA",
+    "spotify:track:3FtYbEfBqAlGO46NUDQSAt",
+    "spotify:track:7Ly3ri0bopwb9vKWyGotgL",
+    "spotify:track:5XTbebKhs3YykWVAqNKio3",
+    "spotify:track:1QIOqSEi9UXzYO2bE8Cwce",
+    "spotify:track:1eyzqe2QqGZUmfcviUDlEV",
+    "spotify:track:1sDdiQ1YqI19oL8f3p79c3",
+    "spotify:track:278tedtAupj5f9z76rGfEo",
+    "spotify:track:6RUKPb4LETWmmr3iAEQktW",
+    "spotify:track:24Yi9hE78yPEbVftBmW1sQ",
+    "spotify:track:0VjIjW4GlUZAMYd2vXMi3b",
+    "spotify:track:2uxEmWdDDe9vvOrTXxCq4E",
+    "spotify:track:6gBFPUFcJLzWGx4lenP6hW",
+    "spotify:track:5aAx2yezTd8zXrkmtKl66Z",
+    "spotify:track:0fcP6ZckIMbMY6H5qe9Unq",
+    "spotify:track:3bidbhpOYeV4knp8AIu8Xn",
+    "spotify:track:038tLCsZBd8yLqYBYoBWnQ"
+]
+
+export async function addToPlaylist () {
+    const url = `https://api.spotify.com/v1/playlists/4JAa8WlnZrUoCwUN63f9QX/tracks`
+    const data = {
+        uris: tracks,
         position: 0
     }
     const additionalHeaders = {

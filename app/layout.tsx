@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AppStoreProvider } from "./store/store";
+import { Toaster } from "@/components/ui/toaster";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -28,6 +29,7 @@ export default function RootLayout({
         <AppStoreProvider>
           <Navbar />
             {children}
+            <Toaster />
           <Footer />
         </AppStoreProvider>
       </body>

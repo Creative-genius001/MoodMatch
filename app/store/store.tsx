@@ -19,6 +19,7 @@ export type PlaylistProp = {
 
 type StoreContextValue = {
   loading: boolean;
+  adding: boolean;
   playlist: Array<SongProp> | null;
   playlistName: string | null;
   playlistDescription: string | null;
@@ -28,7 +29,7 @@ type StoreContextValue = {
   setPlaylist: React.Dispatch<React.SetStateAction<Array<SongProp> | null>>;
   getUserRecommendation: (playlistVibe: string, genre: string) => void;
   createSpotifyPlaylist: () => void;
-  addSongsToSpotifyPlaylsit: () => void;
+  addSongsToSpotifyPlaylsit: () => Promise<boolean | undefined>;
 }
 
 const StoreContext = createContext<StoreContextValue | null>(null);
@@ -41,6 +42,7 @@ type StoreProviderProps = {
 export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [adding, setAdding] = React.useState<boolean>(false);
     const [playlistName, setPlaylistName] = React.useState<string | null>(null);
     const [playlistDescription, setPlaylistDescription] = React.useState<string | null>(null);
     const [playlist, setPlaylist] = React.useState<Array<SongProp> | null>(null);
@@ -67,15 +69,20 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
 
     const addSongsToSpotifyPlaylsit = async() => {
+      setAdding(true)
       const playlistId = await createSpotifyPlaylist()
-      if(!playlistId) return;
+      if(!playlistId) {
+        setAdding(false)
+        return
+      }
       const uris = playlist?.map(song=>{ return song.spotifyURI}) as string[];
       const snapshot_id = await addSongsToPlaylist(playlistId, uris)
-      return(snapshot_id)
+      setAdding(false)
+      return(true)
     }
   
     return (
-        <StoreContext.Provider value={{ loading, setLoading, addSongsToSpotifyPlaylsit, createSpotifyPlaylist, getUserRecommendation, setPlaylistName, setPlaylistDescription, setPlaylist, playlist, playlistName, playlistDescription }}>
+        <StoreContext.Provider value={{ loading, adding, setLoading, addSongsToSpotifyPlaylsit, createSpotifyPlaylist, getUserRecommendation, setPlaylistName, setPlaylistDescription, setPlaylist, playlist, playlistName, playlistDescription }}>
             {children}
         </StoreContext.Provider>
     );

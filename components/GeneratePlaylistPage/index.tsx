@@ -4,10 +4,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useStore } from '@/app/store/store'
 import { Button } from '../ui/button'
 import { FaSpotify } from "react-icons/fa";
+import { toast } from '@/hooks/use-toast'
+import { ToastAction } from '../ui/toast'
 
 const GeneratePlaylistPage = () => {
 
-  const { playlist, playlistName, playlistDescription, addSongsToSpotifyPlaylsit } = useStore();
+  const { playlist, adding, playlistName, playlistDescription, addSongsToSpotifyPlaylsit } = useStore();
+
+  const handleAddToSpotify = ()=> {
+
+        const response = addSongsToSpotifyPlaylsit()
+        if(!response){
+          toast({
+            description: "An error occured while adding songs to playlist"
+          })
+        }else(
+          toast({
+            description: "You playlsit has been created and successfully added to spotify. Enjoy listening!",
+            action: <ToastAction altText="Listen">Listen on Spotify</ToastAction>,
+          })
+        )
+}
 
   return (
     <div className='flex flex-col w-[40%] mx-auto justify-center items-center '>
@@ -36,14 +53,13 @@ const GeneratePlaylistPage = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={()=> {
-                console.log('clicked')
-                addSongsToSpotifyPlaylsit()
-                }}
+              {adding ? <Button size='lg' className='w-full mt-4 py-6' disabled><div className='loader'></div> </Button> : (
+                 <Button onClick={handleAddToSpotify}
                 className="w-full text-[#1ECF5F] bg-black flex py-6">
                 <FaSpotify />
                 <span className='ml-3'>Add playlist to spotify</span>
               </Button>
+              )}
             </CardFooter>
           </Card>
         </div>
