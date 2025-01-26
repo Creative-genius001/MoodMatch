@@ -2,6 +2,7 @@
 
 import { getSongRecommendation } from '@/api/AI';
 import { addSongsToPlaylist, createPlaylist } from '@/api/spotify';
+import getLocalStorage from '@/utils/getLocalStorage';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 
@@ -20,10 +21,12 @@ export type PlaylistProp = {
 type StoreContextValue = {
   loading: boolean;
   adding: boolean;
+  spotifyModalActive: boolean;
   playlist: Array<SongProp> | null;
   playlistName: string | null;
   playlistDescription: string | null;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setSpotifyModalActive: React.Dispatch<React.SetStateAction<boolean>>;
   setPlaylistName: React.Dispatch<React.SetStateAction<string | null>>;
   setPlaylistDescription: React.Dispatch<React.SetStateAction<string | null>>;
   setPlaylist: React.Dispatch<React.SetStateAction<Array<SongProp> | null>>;
@@ -43,6 +46,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [adding, setAdding] = React.useState<boolean>(false);
+    const [spotifyModalActive, setSpotifyModalActive] = React.useState<boolean>(false);
     const [playlistName, setPlaylistName] = React.useState<string | null>(null);
     const [playlistDescription, setPlaylistDescription] = React.useState<string | null>(null);
     const [playlist, setPlaylist] = React.useState<Array<SongProp> | null>(null);
@@ -51,21 +55,33 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
       setLoading(true)
       try {
         const playlist = await getSongRecommendation(playlistVibes, genre);
+        if(!playlist){
+          setLoading(false)
+          return
+        }
         setLoading(false)
         setPlaylist(playlist.songs)
         setPlaylistName(playlist.playlistName)
         setPlaylistDescription(playlist.playlistDescription)
 
       } catch (error) {
+          setLoading(false)
           console.error('Could not fetch songs', error)
       }
     }
 
     const createSpotifyPlaylist = async () => {
-      if(!playlistName || !playlistDescription ) return
-      const spotifyId = await createPlaylist(playlistName, playlistDescription);
-      if(!spotifyId) return;
-      return(spotifyId)
+      const local = getLocalStorage()
+      if(!local) {
+          setSpotifyModalActive(true)
+          return
+      }
+      else {        
+        if(!playlistName || !playlistDescription ) return
+        const spotifyId = await createPlaylist(playlistName, playlistDescription);
+        if(!spotifyId) return;
+        return(spotifyId)
+      }
     }
 
     const addSongsToSpotifyPlaylsit = async() => {
@@ -82,7 +98,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading, adding, setLoading, addSongsToSpotifyPlaylsit, createSpotifyPlaylist, getUserRecommendation, setPlaylistName, setPlaylistDescription, setPlaylist, playlist, playlistName, playlistDescription }}>
+        <StoreContext.Provider value={{ loading, adding,spotifyModalActive, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylsit, createSpotifyPlaylist, getUserRecommendation, setPlaylistName, setPlaylistDescription, setPlaylist, playlist, playlistName, playlistDescription }}>
             {children}
         </StoreContext.Provider>
     );

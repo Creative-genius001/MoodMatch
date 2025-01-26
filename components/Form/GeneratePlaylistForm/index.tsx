@@ -40,7 +40,7 @@ const GeneratePlaylistForm = () => {
                     <FormItem>
                         <FormLabel className='text-md'>What kind of vibe do you want to go for?</FormLabel>
                         <FormControl>
-                            <Textarea className="resize-none w-full h-[120px] py-3 text-lg" placeholder='I feel so estatic and I wanna go to the beach. I want a happy beach vibes kind of playlist' {...field} />
+                            <Textarea className="resize-none w-full h-[120px] py-3 text-lg" placeholder='I feel so estatic and I wanna go to the beach. I want a happy beach vibes kind of playlist' {...field} required />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -54,7 +54,7 @@ const GeneratePlaylistForm = () => {
                     <FormItem className='mt-6'>
                         <FormLabel className='text-md '>What kind of genre are you insterested in listening to?</FormLabel>
                         <FormControl>
-                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='I want a mix of jazz and hiphop' {...field} />
+                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='I want a mix of jazz and hiphop' {...field} required />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

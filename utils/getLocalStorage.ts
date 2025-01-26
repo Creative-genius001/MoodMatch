@@ -1,5 +1,5 @@
 export default function getLocalStorage(): LocalStorageProp | null {
-    const data = localStorage.getItem('atk')
+    const data = localStorage.getItem('access-data')
     if(!data) return null
     const auth = JSON.parse(data);
     return auth

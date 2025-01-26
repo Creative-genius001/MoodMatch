@@ -79,7 +79,7 @@ export function spotifyAuth() {
  
 };
 
-export async function requestAccessToken(state: string, code: string) {
+export async function requestAccessToken(code: string) {
     const payload = {
       url: baseURL,
       form: {
@@ -98,11 +98,12 @@ export async function requestAccessToken(state: string, code: string) {
     await axios.post(url, form, { headers })
         .then(res => {
             const { data } = res;
-            localStorage.setItem('atk', JSON.stringify(data))
+            localStorage.setItem('access-data', JSON.stringify(data))
             getSpotifyId();
+            redirect('/')
         })
         .catch(error => {
-            console.error(error.response.data)
+            console.error('Could not get access token', error)
             throw error;
         })
     
@@ -131,7 +132,7 @@ export async function getRefreshToken () {
     const { data } = await axios.request(authOptions)
 
     console.log('refresh token data',data)
-    localStorage.setItem('atk', JSON.stringify(data))
+    localStorage.setItem('access-data', JSON.stringify(data))
     return(data.access_token)
 
 }
@@ -146,7 +147,7 @@ export async function getSpotifyId () {
     try {
      const response = await spotifyRequestWrapper('get', url, null, additionalHeaders);
         console.log('spotify id',response.id)
-        localStorage.setItem('sptid', JSON.stringify(response.id))
+        localStorage.setItem('spotify-id', JSON.stringify(response.id))
         return(response.id)  
     } catch (error) {
         console.error('Error getting SPotify Id', error)
@@ -157,7 +158,7 @@ export async function getSpotifyId () {
 
 
 export async function createPlaylist (name: string, description: string) {
-    let userId =  JSON.parse(localStorage.getItem('sptid'))
+    let userId =  JSON.parse(localStorage.getItem('spotify-id'))
     if(!userId) {
         userId = await getSpotifyId()
     }

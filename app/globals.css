@@ -17,6 +17,7 @@ html {
 .main-div{
   width: 100vw;
   padding: 7rem 0;
+  position: relative !important;
   background-image: url('./assets/bg.svg');
 }
 
@@ -35,7 +36,7 @@ html {
   animation: l40 2s infinite;
 }
 .loader:before {
-  content:"Loading...";
+  content:"Thinking...";
 }
 
 @keyframes l40{

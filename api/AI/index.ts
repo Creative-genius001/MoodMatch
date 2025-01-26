@@ -1,4 +1,5 @@
 import { PlaylistProp } from '@/app/store/store';
+import { toast } from '@/hooks/use-toast';
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
@@ -76,7 +77,13 @@ Ensure all fields are populated and the playlist description should be as short 
 // const prompt = "What is my fav food?"
 export const getSongRecommendation = async (playlist : string, genre: string) =>{
   const prompt : string = `Generate 20 songs using this instruction ${schema} for someone looking for a ${playlist} type of songs/theme/vibe and ${genre} genres. Also add a playlist name and description that matches the playlist theme`
-  const result = await model.generateContent(prompt);
-  const data = JSON.parse(result.response.text()) as PlaylistProp;
-  return(data);
+  try {
+    const result = await model.generateContent(prompt);
+    const data = JSON.parse(result.response.text()) as PlaylistProp;
+    return(data);
+  } catch (error) {
+    toast({ description: 'Error fetching playlist recommendation'})
+    console.error(error)
+  }
+  
 }
