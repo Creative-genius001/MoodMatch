@@ -3,6 +3,7 @@ import generateRandomStrings from "@/utils/generateRandomString";
 import { redirect } from 'next/navigation';
 import axios from 'axios';
 import getLocalStorage from '@/utils/getLocalStorage';
+import { toast } from '@/hooks/use-toast';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
@@ -11,7 +12,7 @@ const baseURL = 'https://accounts.spotify.com/api/token'
 
 
 const spotifyRequestWrapper = async (method : string, url: string, data: object | null = null, additionalHeaders: Record<string, string> = {}) => {
-    const local = getLocalStorage()
+    const local = getLocalStorage('access-data')
     if(!local) return null
     let accessToken = local.access_token;
 
@@ -99,6 +100,9 @@ export async function requestAccessToken(code: string) {
         .then(res => {
             const { data } = res;
             localStorage.setItem('access-data', JSON.stringify(data))
+            toast({
+              description: 'Connection Successful'                          
+            })
             getSpotifyId();
             redirect('/')
         })
@@ -112,7 +116,7 @@ export async function requestAccessToken(code: string) {
 
 
 export async function getRefreshToken () {
-    const local = getLocalStorage()
+    const local = getLocalStorage('access-data')
     if(!local) return null
     const refreshToken = local.refresh_token;
 
@@ -146,7 +150,6 @@ export async function getSpotifyId () {
     }
     try {
      const response = await spotifyRequestWrapper('get', url, null, additionalHeaders);
-        console.log('spotify id',response.id)
         localStorage.setItem('spotify-id', JSON.stringify(response.id))
         return(response.id)  
     } catch (error) {
@@ -158,7 +161,7 @@ export async function getSpotifyId () {
 
 
 export async function createPlaylist (name: string, description: string) {
-    let userId =  JSON.parse(localStorage.getItem('spotify-id'))
+    let userId =  getLocalStorage('spotify-id')
     if(!userId) {
         userId = await getSpotifyId()
     }
@@ -189,7 +192,6 @@ export async function addSongsToPlaylist (playlistId: string, songs: string[]) {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
     const data = {
         uris: songs,
-        position: 0
     }
     const additionalHeaders = {
         'Content-Type': 'application/json',

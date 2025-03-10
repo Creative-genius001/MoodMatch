@@ -1,15 +1,10 @@
-export default function getLocalStorage(): LocalStorageProp | null {
-    const data = localStorage.getItem('access-data')
-    if(!data) return null
-    const auth = JSON.parse(data);
-    return auth
+export default function getLocalStorage(key: string) {
+    const data = localStorage.getItem(key)
+    return data ? JSON.parse(data) : null
 }
 
 
-type LocalStorageProp = {
-    access_token: string,
-    expires_in: number,
-    refresh_token: string,
-    scope: string,
-    token_type: string
+export  function getSessionStorage(key: string) {
+    const data = sessionStorage.getItem(key)
+    return data ? JSON.parse(data) : null
 }

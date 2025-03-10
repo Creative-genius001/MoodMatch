@@ -1,6 +1,7 @@
 import { PlaylistProp } from '@/app/store/store';
 import { toast } from '@/hooks/use-toast';
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { prompt } from './prompt';
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -64,25 +65,17 @@ const model = genAI.getGenerativeModel({
   },
 });
 
-const schema = `Create a JSON playlist with these fields:
-- "playlistName": string
-- "playlistDescription": string
-- "songs": An array of songs where each has:
-  - "name": string
-  - "artist": string
-  - "spotifyURI": string
-Ensure all fields are populated and the playlist description should be as short as possible and should be a sinlge statement. Let the playlist name be a bit creative too not just generic`
 
 
 // const prompt = "What is my fav food?"
-export const getSongRecommendation = async (playlist : string, genre: string) =>{
-  const prompt : string = `Generate 20 songs using this instruction ${schema} for someone looking for a ${playlist} type of songs/theme/vibe and ${genre} genres. Also add a playlist name and description that matches the playlist theme`
+export const getSongRecommendation = async (mood : string, genre: string) =>{
+  const Fprompt: string = prompt + mood + genre
   try {
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(Fprompt);
     const data = JSON.parse(result.response.text()) as PlaylistProp;
     return(data);
   } catch (error) {
-    toast({ description: 'Error fetching playlist recommendation'})
+    toast({ description: 'Server is currently overloaded'})
     console.error(error)
   }
   
