@@ -5,57 +5,6 @@ import { prompt } from './prompt';
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
 const genAI = new GoogleGenerativeAI(apiKey);
-// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-// const schema = {
-//   description: "List of recommended songs",
-//   type: SchemaType.ARRAY,
-//   items: {
-//     type: SchemaType.OBJECT,
-//     properties: {
-//       song: {
-//         type: SchemaType.ARRAY,
-//         items: {
-//           type: SchemaType.OBJECT,
-//           properties: {
-//             name: {
-//             type: SchemaType.STRING,
-//             description: "Name of the song",
-//             nullable: false,
-//           },
-//           artist: {
-//             type: SchemaType.STRING,
-//             description: "Artist who sang the song",
-//             nullable: false,
-//           },
-//           spotifyId: {
-//             type: SchemaType.STRING,
-//             description: "spotify id of the song",
-//             nullable: false
-//           },
-//           }
-//         }
-//       },
-      
-//       playlistName: {
-//         type: SchemaType.STRING,
-//         description: "Spotify playlist name",
-//         nullable: false
-//       },
-//       playlistDescription: {
-//         type: SchemaType.STRING,
-//         description: "spotify playlist description",
-//         nullable: false
-//       },
-//       errorMessage: {
-//         type: SchemaType.STRING,
-//         description: "error message if the user does not ask for a playlist recommendation",
-//         nullable: false
-//       }
-//     },
-//     // required: ["songName"],
-//   },
-// };
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-pro",
@@ -67,7 +16,6 @@ const model = genAI.getGenerativeModel({
 
 
 
-// const prompt = "What is my fav food?"
 export const getSongRecommendation = async (mood : string, genre: string) =>{
   const Fprompt: string = prompt + mood + genre
   try {

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
    import { z } from "zod"
    import { zodResolver } from "@hookform/resolvers/zod"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const GeneratePlaylistForm = () => {
 
@@ -53,9 +54,18 @@ const GeneratePlaylistForm = () => {
                     render={({ field }) => (
                     <FormItem className='mt-6'>
                         <FormLabel className='text-md '>What kind of genre are you insterested in listening to?</FormLabel>
-                        <FormControl>
-                            <Textarea className="resize-none w-full h-[80px] py-3 text-lg" placeholder='I want a mix of jazz and hiphop' {...field} required />
-                        </FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>                         
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Classical" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                    {genres.map((genre, index) => (
+                                        <SelectItem key={index} value={genre}>{genre}</SelectItem>
+                                    ))}
+                            </SelectContent>    
+                        </Select>                        
                         <FormMessage />
                     </FormItem>
                     
@@ -69,4 +79,32 @@ const GeneratePlaylistForm = () => {
 }
 
 export default GeneratePlaylistForm
+
+
+const genres = [
+  "Gospel",
+  "Pop",
+  "Hip-Hop/Rap",
+  "Rock",
+  "R&B/Soul",
+  "Electronic/Dance (EDM)",
+  "Lo-Fi",
+  "Jazz",
+  "Acoustic/Folk",
+  "Ambient",
+  "Classical",
+  "Trap",
+  "Metal",
+  "Techno/House",
+  "Reggaeton",
+  "Latin",
+  "Afrobeats",
+  "Reggae",
+  "90s Hip-Hop/R&B",
+  "70s Disco/Funk",
+  "Classic Rock",
+  "Oldies (50s/60s)",
+  "Random"
+];
+
 
