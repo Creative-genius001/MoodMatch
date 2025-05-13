@@ -82,6 +82,7 @@ export default GeneratePlaylistForm
 
 
 const genres = [
+  "Auto Recommend",
   "Gospel",
   "Pop",
   "Hip-Hop/Rap",
@@ -103,8 +104,7 @@ const genres = [
   "90s Hip-Hop/R&B",
   "70s Disco/Funk",
   "Classic Rock",
-  "Oldies (50s/60s)",
-  "Random"
+  "Oldies (50s/60s)"
 ];
 
 

@@ -66,9 +66,9 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
         sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
         setPlaylist(playlist)
 
-      } catch (error) {
+      } catch (e) {
           setLoading(false)
-          console.error('Could not fetch songs', error)
+          toast({ description: "Server is overloaded currently"})
       }
     }
 
@@ -83,13 +83,13 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
       else {        
         if(!playlist) return
         const playlistId = await createPlaylist(playlist.playlistName, playlist.playlistDescription);
-        if(!spotifyId) {
+        if(!playlistId) {
           toast({ description: 'Error adding playlist to spotify' })
-        };
-        toast({
-            description: "You playlsit has been created and successfully added to spotify. Enjoy listening!",
-          })
-        return(playlistId)
+          return null
+        }
+        else{
+          return(playlistId)
+        }
       }
     }
 
@@ -101,10 +101,18 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
         return
       }
       const uris = playlist?.songs.map(song=>{ return song.spotifyURI}) as string[];
-      console.log(uris)
       const snapshot_id = await addSongsToPlaylist(playlistId, uris)
+      if(snapshot_id == null){
+         toast({
+            description: "Error creating playlist",
+          })
+          return
+      }
       setSpotifyId(snapshot_id);
       setAdding(false)
+      toast({
+            description: "You playlsit has been created and successfully added to spotify. Enjoy listening!",
+      })
       sessionStorage.removeItem("recommended-playlist");
       setPlaylist(null)
       setGoToSpotify(true)

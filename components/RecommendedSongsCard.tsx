@@ -11,9 +11,9 @@ type RecommendedSongsCardProp = {
 
   
 
-const RecommendedSongsCard = ( { playlistData, connectToSpotify }: RecommendedSongsCardProp ) => {
+const RecommendedSongsCard = ( { playlistData }: RecommendedSongsCardProp ) => {
 
-  const { adding } = useStore();
+  const { adding, addSongsToSpotifyPlaylsit } = useStore();
 
   return (
     <>
@@ -34,7 +34,7 @@ const RecommendedSongsCard = ( { playlistData, connectToSpotify }: RecommendedSo
             </CardContent>
             <CardFooter>
               {adding ? <Button size='lg' className='w-full mt-4 py-6' disabled><div className='loader'></div> </Button> : (
-                 <Button onClick={connectToSpotify}
+                 <Button onClick={addSongsToSpotifyPlaylsit}
                 className="w-full text-[#1ECF5F] bg-black flex py-6">
                 <FaSpotify />
                 <span className='ml-3'>Add playlist to spotify</span>
