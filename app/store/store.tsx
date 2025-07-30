@@ -2,8 +2,8 @@
 
 import { getSongRecommendation } from '@/api/AI';
 import { addSongsToPlaylist, createPlaylist } from '@/api/spotify';
-import { toast } from '@/hooks/use-toast';
-import getLocalStorage, { getSessionStorage } from '@/utils/getLocalStorage';
+import { toast } from '@/app/hooks/use-toast';
+import getLocalStorage, { getSessionStorage } from '@/app/utils/getLocalStorage';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 

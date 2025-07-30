@@ -18,11 +18,22 @@ html {
 
 .main-div{
   width: 100vw;
-  padding: 7rem 0;
-  position: relative !important;
-  /* background: #041008; */
-  background: linear-gradient(135deg, hsl(150 80% 45%), hsl(150 90% 60%));
+  /* min-height: 100vh; */
+  height: auto;
+  position: relative;
+  background: #041008;
+  overflow: hidden;
+  /* background: linear-gradient(135deg, hsl(150 80% 45%), hsl(150 90% 60%)); */
   /* background-image: url('./assets/bg.svg'); */
+}
+
+.btn-default {
+  background-color: #2EC47A;
+  color: #0b160e;
+}
+
+.btn-default:hover{
+  background-color: #34d886;
 }
 
 
@@ -42,6 +53,48 @@ html {
 .loader:before {
   content:"Thinking...";
 }
+
+.blobs {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(130px);
+}
+
+.blob1{
+  background: linear-gradient(135deg, #041008, #0F3B18);
+  top: -90%;
+  left: 0;
+  transform: rotate(20deg);
+}
+
+.blob2{
+  background: linear-gradient(135deg, #06322A, #0F3B18);
+  top: -70%;
+  left: 50%;
+  transform: rotate(20deg);
+}
+
+.blob3{
+  background: linear-gradient(135deg, #06322A, #0F3B18);
+  bottom: -70%;
+  left: 50%;
+  transform: rotate(20deg);
+}
+
+.blob4{
+  background: linear-gradient(135deg, #06322A, #10482C);
+  bottom: -40%;
+  left: -30%;
+  transform: rotate(20deg);
+}
+
+.card-gradient{
+  background: linear-gradient(320deg , #102014,#0e1e12 );
+}
+
 
 @keyframes l40{
   0%,100% {

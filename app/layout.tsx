@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Footer from "@/app/components/Footer";
 import { AppStoreProvider } from "./store/store";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/app/components/ui/toaster";
 
 const dmSans = Geist({
   variable: "--font-geist",
@@ -27,7 +26,6 @@ export default function RootLayout({
         className={dmSans.className}
       >
         <AppStoreProvider>
-          <Navbar />
             {children}
             <Toaster />
           <Footer />

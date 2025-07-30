@@ -2,7 +2,7 @@ import React from 'react'
 import GeneratePlaylistForm from '../Form/GeneratePlaylistForm'
 import { PlaylistProp, useStore } from '@/app/store/store'
 import RecommendedSongsCard from '../RecommendedSongsCard'
-import getLocalStorage from '@/utils/getLocalStorage'
+import getLocalStorage from '@/app/utils/getLocalStorage'
 import ListenOnSpotifyBtn from '../ListenOnSpotifyBtn'
 
 

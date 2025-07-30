@@ -14,6 +14,7 @@ export default {
   			foreground: 'hsl(var(--foreground))',
   			dark50: 'var(--dark50)',
   			blue50: 'var(--blue50)',
+			brightGreen: '#2EC47A',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -31,7 +32,7 @@ export default {
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
   			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
+  				DEFAULT: '#ffffffb9',
   				foreground: 'hsl(var(--muted-foreground))'
   			},
   			accent: {

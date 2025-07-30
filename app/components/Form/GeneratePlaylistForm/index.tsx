@@ -1,14 +1,14 @@
 'use client'
 
 import { useStore } from "@/app/store/store";
-import { genres } from "@/types/genres";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea";
+import { genres } from "@/app/types/type";
+import { Button } from "@/app/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/components/ui/form"
+import { Textarea } from "@/app/components/ui/textarea";
 import { useForm } from "react-hook-form";
    import { z } from "zod"
    import { zodResolver } from "@hookform/resolvers/zod"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/ui/select";
 
 const GeneratePlaylistForm = () => {
 

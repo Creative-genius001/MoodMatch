@@ -1,9 +1,9 @@
 import querystring from 'querystring';
-import generateRandomStrings from "@/utils/generateRandomString";
+import generateRandomStrings from "@/app/utils/generateRandomString";
 import { redirect } from 'next/navigation';
 import axios from 'axios';
-import getLocalStorage from '@/utils/getLocalStorage';
-import { toast } from '@/hooks/use-toast';
+import getLocalStorage from '@/app/utils/getLocalStorage';
+import { toast } from '@/app/hooks/use-toast';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;

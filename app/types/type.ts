@@ -23,3 +23,5 @@ export const genres = [
   "Classic Rock",
   "Oldies (50s/60s)"
 ];
+
+export const moods = ["Energetic", "Chill", "Focus", "Party", "Melancholic", "Uplifting"];
