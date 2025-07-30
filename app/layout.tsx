@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AppStoreProvider } from "./store/store";
 import { Toaster } from "@/components/ui/toaster";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const dmSans = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
 });
 

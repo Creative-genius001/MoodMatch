@@ -1,5 +1,4 @@
 import { PlaylistProp } from '@/app/store/store';
-import { toast } from '@/hooks/use-toast';
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { prompt } from './prompt';
 

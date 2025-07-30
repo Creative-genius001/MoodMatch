@@ -5,6 +5,8 @@
 :root {
   --dark50: #2d2d2d;
   --blue50: #c5f1ff;
+  font-family: "Geist", sans-serif;
+  font-optical-sizing: auto;
 }
 
 html {
@@ -18,7 +20,9 @@ html {
   width: 100vw;
   padding: 7rem 0;
   position: relative !important;
-  background-image: url('./assets/bg.svg');
+  /* background: #041008; */
+  background: linear-gradient(135deg, hsl(150 80% 45%), hsl(150 90% 60%));
+  /* background-image: url('./assets/bg.svg'); */
 }
 
 
