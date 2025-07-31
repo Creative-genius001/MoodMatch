@@ -24,4 +24,4 @@ export const genres = [
   "Oldies (50s/60s)"
 ];
 
-export const moods = ["Energetic", "Chill", "Focus", "Party", "Melancholic", "Uplifting"];
+export const moods = ["Energetic", "Chill", "Focus", "Party", "Melancholic", "Uplifting", "Sad", "Lonely", "Happy"];

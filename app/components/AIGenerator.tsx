@@ -4,13 +4,52 @@ import { genres, moods } from '../types/type';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
+import { Music, Wand2 } from 'lucide-react';
+import { Validate } from '../types/validate';
+import { useStore } from '../store/store';
 
 export const AIGenerator = () => {
+
+    const { generatePlaylist, loading } = useStore();
 
     const [prompt, setPrompt] = useState("");
     const [mood, setMood] = useState("");
     const [genre, setGenre] = useState("");
-    const [isGenerating, setIsGenerating] = useState(false);
+    const [trackNum, setTrackNum] = useState("");
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = event.target.value;
+
+      let numericValue: number;
+      if (inputValue === '') {
+        numericValue = NaN; 
+      } else {
+        numericValue = parseFloat(inputValue);
+      }
+
+      if (!isNaN(numericValue)) {
+        if (numericValue > 30) {
+          numericValue = 30;
+        } else if (numericValue < 0) {
+          numericValue = 10;
+        }
+        setTrackNum(numericValue.toString());
+      } else if (inputValue === '') {
+        setTrackNum("");
+      } else {
+        setTrackNum("");
+      }
+  };
+
+  const handleGenerate = async () => {
+    const isValid = Validate({prompt, mood, genre, trackNum})
+    if (!isValid) {
+        console.error("Empty fields or invalid input")
+        return
+    } 
+    generatePlaylist(mood, genre, prompt, parseFloat(trackNum))
+  };
+
 
   return (
     <div className='card-gradient w-1/2 mx-auto mt-12 p-8 rounded-xl border border-[#2e4635] shadow-elegant backdrop-blur-sm'>
@@ -27,7 +66,7 @@ export const AIGenerator = () => {
                     placeholder="I want upbeat electronic music for my morning workout..."
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    className="min-h-[100px] bg-white border-border/50 focus:border-primary"
+                    className="min-h-[100px] bg-transparent text-brightGreen border-border focus:border-brightGreen"
                 />
             </div>
         </div>
@@ -41,7 +80,7 @@ export const AIGenerator = () => {
               <Button
                 key={moodOption}
                 onClick={() => setMood(moodOption)}
-                className={`${mood === moodOption ? "btn-default" : "btn-outline"} text-sm bg-[#0b160e]`}
+                className={`${mood === moodOption ? "bg-brightGreen text-dark50 hover:bg-brightGreen hover:shadow-glow-primary transition-all ease-out" : "bg-dark50 text-white"} text-sm`}
               >
                 {moodOption}
               </Button>
@@ -54,8 +93,8 @@ export const AIGenerator = () => {
             <label className="block text-sm font-medium text-foreground mb-2">
               Genre
             </label>
-            <Select>
-                <SelectTrigger className="w-full">
+            <Select onValueChange={setGenre} >
+                <SelectTrigger className="w-full py-5">
                     <SelectValue placeholder="Select a genre" />
                 </SelectTrigger>
                 <SelectContent>
@@ -72,13 +111,35 @@ export const AIGenerator = () => {
             <label className="block text-sm font-medium text-foreground mb-2">
               Number of tracks
             </label>
-            <Input 
-              type="number" 
-              placeholder="20" 
-              className="bg-white border-border/50 focus:border-primary"
+            <Input
+                onChange={handleChange}
+                type="number" 
+                max="30"
+                value={trackNum}
+                className="bg-white border-border/50 py-5 focus:border-primary text-dark50"
             />
           </div>
         </div>
+
+        <Button
+          onClick={handleGenerate}
+          disabled={!prompt || loading}
+          variant="hero"
+          size="lg"
+          className="w-full text-lg py-6 z-10 mt-8"
+        >
+          {loading ? (
+            <>
+              <Music className="w-5 h-5 animate-spin" />
+              Generating Your Perfect Playlist...
+            </>
+          ) : (
+            <>
+              <Wand2 className="w-5 h-5" />
+              Generate AI Playlist
+            </>
+          )}
+        </Button>
     </div>
   )
 }

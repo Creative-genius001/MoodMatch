@@ -1,7 +1,14 @@
-import { Play, Headphones } from "lucide-react";
+import { Headphones, Github } from "lucide-react";
 import { Button } from "./ui/button";
+import { spotifyAuth } from "@/api/spotify";
+import Link from "next/link";
 
 const Hero = () => {
+
+  const handleConnectToSpotify = () => {
+    spotifyAuth();
+  }
+
   return (
     <div className="w-1/2 mx-auto pt-[170px]">
         <div className="relative z-10 text-center space-y-6 px-6 max-w-4xl">
@@ -16,14 +23,16 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-          <Button size="lg" className="text-lg px-8 py-6 bg-brightGreen">
-            <Play className="w-6 h-6" />
-            Start Generating
-          </Button>
-          <Button size="lg" className="text-lg px-8 py-6">
+          <Button onClick={handleConnectToSpotify} variant="hero" size="lg" className="text-lg px-8 py-6">
             <Headphones className="w-6 h-6" />
             Connect Spotify
           </Button>
+          <Link target="_blank" href="https://github.com/Creative-genius001/MoodMatch">
+            <Button variant="neon" size="lg" className="text-lg px-8 py-6">
+              <Github className="w-6 h-6" />            
+              Star on Github
+            </Button>
+          </Link>
         </div>
 
     </div>

@@ -3,7 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Footer from "@/app/components/Footer";
 import { AppStoreProvider } from "./store/store";
-import { Toaster } from "@/app/components/ui/toaster";
+import Providers from "./providers/provider";
 
 const dmSans = Geist({
   variable: "--font-geist",
@@ -25,11 +25,12 @@ export default function RootLayout({
       <body
         className={dmSans.className}
       >
-        <AppStoreProvider>
-            {children}
-            <Toaster />
-          <Footer />
-        </AppStoreProvider>
+        <Providers>
+          <AppStoreProvider>
+              {children}
+            <Footer />
+          </AppStoreProvider>
+        </Providers>
       </body>
     </html>
   );

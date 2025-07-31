@@ -3,12 +3,11 @@ import generateRandomStrings from "@/app/utils/generateRandomString";
 import { redirect } from 'next/navigation';
 import axios from 'axios';
 import getLocalStorage from '@/app/utils/getLocalStorage';
-import { toast } from '@/app/hooks/use-toast';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
-const redirect_uri = 'http://localhost:3000/';
-const baseURL = 'https://accounts.spotify.com/api/token'
+const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URL as string;
+const baseURL = process.env.NEXT_PUBLIC_SPOTIFY_BASE_URL as string;
 
 
 const spotifyRequestWrapper = async (method : string, url: string, data: object | null = null, additionalHeaders: Record<string, string> = {}) => {
@@ -66,6 +65,7 @@ const spotifyRequestWrapper = async (method : string, url: string, data: object 
 export function spotifyAuth() {
 
   const state = generateRandomStrings(16);
+  sessionStorage.setItem('stateCode', state)
   const scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private user-top-read';
 
   const spotifyAuthUrl = `https://accounts.spotify.com/authorize?${querystring.stringify({
@@ -76,7 +76,7 @@ export function spotifyAuth() {
     state,
   })}`;
 
-   redirect(spotifyAuthUrl);
+  redirect(spotifyAuthUrl);
  
 };
 
@@ -100,9 +100,6 @@ export async function requestAccessToken(code: string) {
         .then(res => {
             const { data } = res;
             localStorage.setItem('access-data', JSON.stringify(data))
-            toast({
-              description: 'Connection Successful'                          
-            })
             getSpotifyId();
             redirect('/')
         })
@@ -192,48 +189,6 @@ export async function addSongsToPlaylist (playlistId: string, songs: string[]) {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
     const data = {
         uris: songs,
-    }
-    const additionalHeaders = {
-        'Content-Type': 'application/json',
-    }
-    try {
-        const response = await spotifyRequestWrapper('post', url, data,  additionalHeaders);
-        return (response.snapshot_id)
-    } catch (error) {
-        console.error('Error adding songs to playlist', error)
-    }
-}   
-
-
-
-const tracks = [
-    "spotify:track:2YoHXDX39wVHAz2Ym4mOEA",
-    "spotify:track:1n1jOaL7w3zfoE1nbbP1iW",
-    "spotify:track:0NIfwBqfHHX7XOCW7sUuTD",
-    "spotify:track:1jJci4qxiYcOHhQRcTxdeA",
-    "spotify:track:3FtYbEfBqAlGO46NUDQSAt",
-    "spotify:track:7Ly3ri0bopwb9vKWyGotgL",
-    "spotify:track:5XTbebKhs3YykWVAqNKio3",
-    "spotify:track:1QIOqSEi9UXzYO2bE8Cwce",
-    "spotify:track:1eyzqe2QqGZUmfcviUDlEV",
-    "spotify:track:1sDdiQ1YqI19oL8f3p79c3",
-    "spotify:track:278tedtAupj5f9z76rGfEo",
-    "spotify:track:6RUKPb4LETWmmr3iAEQktW",
-    "spotify:track:24Yi9hE78yPEbVftBmW1sQ",
-    "spotify:track:0VjIjW4GlUZAMYd2vXMi3b",
-    "spotify:track:2uxEmWdDDe9vvOrTXxCq4E",
-    "spotify:track:6gBFPUFcJLzWGx4lenP6hW",
-    "spotify:track:5aAx2yezTd8zXrkmtKl66Z",
-    "spotify:track:0fcP6ZckIMbMY6H5qe9Unq",
-    "spotify:track:3bidbhpOYeV4knp8AIu8Xn",
-    "spotify:track:038tLCsZBd8yLqYBYoBWnQ"
-]
-
-export async function addToPlaylist () {
-    const url = `https://api.spotify.com/v1/playlists/4JAa8WlnZrUoCwUN63f9QX/tracks`
-    const data = {
-        uris: tracks,
-        position: 0
     }
     const additionalHeaders = {
         'Content-Type': 'application/json',

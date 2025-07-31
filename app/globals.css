@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "tailwindcss";
+@plugin './hero.ts';
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+
 :root {
   --dark50: #2d2d2d;
   --blue50: #c5f1ff;
@@ -27,14 +33,22 @@ html {
   /* background-image: url('./assets/bg.svg'); */
 }
 
-.btn-default {
+/* .btn-default {
   background-color: #2EC47A;
   color: #0b160e;
 }
 
-.btn-default:hover{
-  background-color: #34d886;
-}
+.btn-default:hover {
+    background-color: #c5f1ff;
+  }
+.btn-outline {
+  background-color: #0b160e;
+  color: white;
+  
+  :hover {
+    background-color: #c5f1ff;
+  }
+} */
 
 
 /* HTML: <div class="loader"></div> */
@@ -210,10 +224,35 @@ html {
   }
 }
 
+@layer base { 
+  :root {
+    --gradient-primary: linear-gradient(135deg, hsl(150 80% 45%), hsl(150 90% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(280 85% 65%), hsl(320 85% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 15% 8%) 0%, hsl(210 25% 15%) 50%, hsl(150 30% 20%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(210 20% 12%) 0%, hsl(210 25% 18%) 100%);
+
+    --primary-glow: 150 90% 60%;
+
+    --secondary: 280 85% 65%;
+    --secondary-foreground: 210 15% 95%;
+
+    --accent: 320 85% 65%;
+    --accent-foreground: 210 15% 95%;
+
+    --glow-primary: 0 0 30px hsl(150 80% 45% / 0.3);
+    --glow-secondary: 0 0 30px hsl(280 85% 65% / 0.3);
+    --shadow-elegant: 0 10px 40px -15px hsl(210 15% 8% / 0.8);
+
+    --border-card: #2e4635;
+  }
+
+}
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
