@@ -8,7 +8,7 @@ import { ValidatedTrack } from '@/app/types/type';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
-const redirect_uri = "http://localhost:3000/callback"
+const redirect_uri = "https://moodmatch-ai.vercel.app/callback"
 const baseURL = process.env.NEXT_PUBLIC_SPOTIFY_BASE_URL as string;
 
 
