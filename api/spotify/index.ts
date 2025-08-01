@@ -3,6 +3,8 @@ import generateRandomStrings from "@/app/utils/generateRandomString";
 import { redirect } from 'next/navigation';
 import axios from 'axios';
 import getLocalStorage from '@/app/utils/getLocalStorage';
+import { SongProp } from '@/app/store/store';
+import { ValidatedTrack } from '@/app/types/type';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
@@ -131,8 +133,6 @@ export async function getRefreshToken () {
     };
 
     const { data } = await axios.request(authOptions)
-
-    console.log('refresh token data',data)
     localStorage.setItem('access-data', JSON.stringify(data))
     return(data.access_token)
 
@@ -151,13 +151,14 @@ export async function getSpotifyId () {
         return(response.id)  
     } catch (error) {
         console.error('Error getting SPotify Id', error)
+        throw error;
     }
    
 }
 
 
 
-export async function createPlaylist (name: string, description: string) {
+export async function createPlaylist (name: string, description: string): Promise<{playlistID: string, playlistLink: string}> {
     let userId =  getLocalStorage('spotify-id')
     if(!userId) {
         userId = await getSpotifyId()
@@ -175,20 +176,21 @@ export async function createPlaylist (name: string, description: string) {
     try {
      
     const response = await spotifyRequestWrapper('post', url, data,  additionalHeaders);
-    const playlistId = response.id
-    return(playlistId)
+    const playlistID = response.id as string;
+    const playlistLink = response.external_urls.spotify as string;
+    return({playlistID, playlistLink})
         
     } catch (error) {
         console.error('Could not create playlist', error)
-        return null;
+        throw error;
     }
 
 }
 
-export async function addSongsToPlaylist (playlistId: string, songs: string[]) {
+export async function addSongsToPlaylist (playlistId: string, uris: string[]) {
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
     const data = {
-        uris: songs,
+        uris,
     }
     const additionalHeaders = {
         'Content-Type': 'application/json',
@@ -198,5 +200,63 @@ export async function addSongsToPlaylist (playlistId: string, songs: string[]) {
         return (response.snapshot_id)
     } catch (error) {
         console.error('Error adding songs to playlist', error)
+        throw error
     }
 }   
+
+
+export async function addPlaylistToSpotify (name: string, description: string, songs: SongProp[]) {
+  const validatedTracks = await searchForSongs(songs).catch((e)=> {throw e})
+
+  if (validatedTracks == null){
+    console.error("Search for songs failed")
+    throw ("Could not search for songs")
+  } else {
+    const trackURIs = validatedTracks.map((track)=> {return track.uri})
+    const validTrackURIS = trackURIs.filter((uri): uri is string => uri !== null);
+    
+    const {playlistID, playlistLink} = await createPlaylist(name, description).catch((e)=> { throw e})
+    const snapshotID = await addSongsToPlaylist(playlistID, validTrackURIS).catch((e)=> { throw e})
+  
+    return ({snapshot_id : snapshotID, playlist_id: playlistID, playlist_link: playlistLink})
+  }
+}
+
+
+export async function searchForSongs(songs: SongProp[]): Promise<ValidatedTrack[]> {
+
+  const validatedTracks: ValidatedTrack[] = [];
+  for (const song of songs) {
+    const query = `track:"${song.name}" artist:"${song.artist}"`;
+    const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`
+    const additionalHeaders = {
+        'Content-Type': 'application/json',
+    }
+    try {
+        const response = await spotifyRequestWrapper('get', url, null,  additionalHeaders);
+        if (response.tracks && response.tracks.items[0].length > 0) {
+          const track = response.tracks.items[0]
+          validatedTracks.push({
+            title: track.name,
+            artist: track.artists.map((a: any) => a.name).join(', '),
+            uri: track.uri,
+            link: track.href,
+          });
+        } else {
+          validatedTracks.push({
+            title: song.name,
+            artist: song.artist,
+            uri: null,
+            link: null,
+          });
+        }
+    } catch (error) {
+      console.error(`Failed to search for ${song.name} by ${song.artist}:`, error);
+      throw error
+  }
+  }
+
+  return validatedTracks;
+  
+}
+

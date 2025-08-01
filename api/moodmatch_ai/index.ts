@@ -18,10 +18,9 @@ const model = genAI.getGenerativeModel({
 export const getSongRecommendation = async (mood : string, genre: string, desc : string, trackNum: number) =>{
   const AIPrompt: string = prompt + mood + genre + desc + trackNum
   try {
-    // const result = await model.generateContent(AIPrompt);
-    // const data = JSON.parse(result.response.text()) as PlaylistProp;
-    // return(data);
-    throw new Error(" failed")
+    const result = await model.generateContent(AIPrompt);
+    const data = JSON.parse(result.response.text()) as PlaylistProp;
+    return(data);
   } catch (error) {
     console.error(error)
     throw new Error("Server is overloaded currently")

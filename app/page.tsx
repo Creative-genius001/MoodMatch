@@ -9,7 +9,7 @@ import Hero from "./components/Hero";
 import { AIGenerator } from "./components/AIGenerator";
 import GeneratedPlaylist from "./components/GeneratedPlaylist";
 import { getSessionStorage } from "./utils/getLocalStorage";
-import { addToast } from "@heroui/toast";
+import { toast } from "sonner";
 
 
 export default function Home() {
@@ -23,12 +23,7 @@ export default function Home() {
     const error = searchParams.get('error')
 
     if (error != null) {
-      addToast({
-        title: "Failed",
-        color: "warning",
-        description: "You need to login to you spotify account!",
-        variant: "flat"
-      })
+      toast("You need to login to you spotify account!")
     }
     if(state != null && code != null){
       const stateCode = getSessionStorage('stateCode')

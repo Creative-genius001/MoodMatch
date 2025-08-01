@@ -25,3 +25,10 @@ export const genres = [
 ];
 
 export const moods = ["Energetic", "Chill", "Focus", "Party", "Melancholic", "Uplifting", "Sad", "Lonely", "Happy"];
+
+export interface ValidatedTrack {
+  title: string;
+  artist: string;
+  uri: string | null;
+  link: string | null;
+}
