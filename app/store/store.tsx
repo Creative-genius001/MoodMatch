@@ -25,10 +25,9 @@ export type PlaylistProp = {
 
 type StoreContextValue = {
   loading: boolean;
-  adding: boolean;
   spotifyModalActive: boolean;
   playlist: PlaylistProp | null;
-  spotifyId: string | null;
+  playlistLink: string | null;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setSpotifyModalActive: React.Dispatch<React.SetStateAction<boolean>>;
   setPlaylist: React.Dispatch<React.SetStateAction<PlaylistProp | null>>;
@@ -47,9 +46,8 @@ type StoreProviderProps = {
 export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [adding, setAdding] = React.useState<boolean>(false);
-    const [spotifyModalActive, setSpotifyModalActive] = React.useState<boolean>(false);
-    const [spotifyId, setSpotifyId] = React.useState<string | null>(null);
+    const [spotifyModalActive, setSpotifyModalActive] = React.useState<boolean>(true);
+    const [playlistLink, setPlaylistLink] = React.useState<string | null>(null);
     const [playlist, setPlaylist] = React.useState<PlaylistProp | null>(null);
 
 
@@ -61,6 +59,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
       }
 
       try {
+        setLoading(true)
         let playlist = await getSongRecommendation(prompt.mood, prompt.genre, prompt.desc, prompt.trackNum);
         
         playlist = {...playlist, generatedAt: new Date().toISOString()}
@@ -68,6 +67,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
         setPlaylist(playlist)
         setLoading(false) 
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setLoading(false)
         toast("Failed to generate playlist. Try again!")
@@ -86,6 +86,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
         setPlaylist(playlist)
         setLoading(false) 
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setLoading(false)
         toast("Failed to generate playlist. Try again!")
@@ -106,15 +107,18 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
       }
 
       try {
-        setAdding(true)
-        const snapshotID = await addPlaylistToSpotify(playlist.playlistName, playlist.playlistDescription, playlist.songs)
-        setSpotifyId(snapshotID);
-        setAdding(false)
+        setLoading(true)
+        const { snapshot_id, playlist_id, playlist_link } = await addPlaylistToSpotify(playlist.playlistName, playlist.playlistDescription, playlist.songs)
+        setPlaylistLink(playlist_link);
+        setLoading(false)
         toast('Playlist added successfully. Enjoy Listening!')
         sessionStorage.removeItem("recommended-playlist");
+        sessionStorage.removeItem("prompt");
         setPlaylist(null)
         return(true)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
+          setLoading(false)
           toast('Error creating playlist')
           return false
       }
@@ -122,7 +126,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading, spotifyId, adding, spotifyModalActive, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
+        <StoreContext.Provider value={{ loading, playlistLink, spotifyModalActive, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
             {children}
         </StoreContext.Provider>
     );

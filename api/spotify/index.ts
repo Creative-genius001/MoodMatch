@@ -101,6 +101,7 @@ export async function requestAccessToken(code: string) {
     await axios.post(url, form, { headers })
         .then(res => {
             const { data } = res;
+            console.log(data)
             localStorage.setItem('access-data', JSON.stringify(data))
             getSpotifyId();
             redirect('/')
@@ -117,7 +118,7 @@ export async function requestAccessToken(code: string) {
 export async function getRefreshToken () {
     const local = getLocalStorage('access-data')
     if(!local) return null
-    const refreshToken = local.refresh_token;
+    const refreshToken = local.access_token;
 
     const authOptions = {
         method: 'POST',
@@ -207,56 +208,59 @@ export async function addSongsToPlaylist (playlistId: string, uris: string[]) {
 
 export async function addPlaylistToSpotify (name: string, description: string, songs: SongProp[]) {
   const validatedTracks = await searchForSongs(songs).catch((e)=> {throw e})
-
-  if (validatedTracks == null){
-    console.error("Search for songs failed")
-    throw ("Could not search for songs")
-  } else {
-    const trackURIs = validatedTracks.map((track)=> {return track.uri})
-    const validTrackURIS = trackURIs.filter((uri): uri is string => uri !== null);
-    
-    const {playlistID, playlistLink} = await createPlaylist(name, description).catch((e)=> { throw e})
-    const snapshotID = await addSongsToPlaylist(playlistID, validTrackURIS).catch((e)=> { throw e})
   
-    return ({snapshot_id : snapshotID, playlist_id: playlistID, playlist_link: playlistLink})
-  }
+  const validUris = validatedTracks
+      .filter((track): track is ValidatedTrack & { uri: string } => track.uri !== null)
+      .map((track) => track.uri);
+
+    
+  const {playlistID, playlistLink} = await createPlaylist(name, description).catch((e)=> { throw e})
+  const snapshotID = await addSongsToPlaylist(playlistID, validUris).catch((e)=> { throw e})
+    
+  return ({snapshot_id : snapshotID, playlist_id: playlistID, playlist_link: playlistLink})
 }
 
 
 export async function searchForSongs(songs: SongProp[]): Promise<ValidatedTrack[]> {
+  const additionalHeaders = {
+    'Content-Type': 'application/json',
+  };
 
-  const validatedTracks: ValidatedTrack[] = [];
-  for (const song of songs) {
+  const trackPromises = songs.map(async (song) => {
     const query = `track:"${song.name}" artist:"${song.artist}"`;
-    const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`
-    const additionalHeaders = {
-        'Content-Type': 'application/json',
-    }
+    const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`;
+
     try {
-        const response = await spotifyRequestWrapper('get', url, null,  additionalHeaders);
-        if (response.tracks && response.tracks.items[0].length > 0) {
-          const track = response.tracks.items[0]
-          validatedTracks.push({
-            title: track.name,
-            artist: track.artists.map((a: any) => a.name).join(', '),
-            uri: track.uri,
-            link: track.href,
-          });
-        } else {
-          validatedTracks.push({
-            title: song.name,
-            artist: song.artist,
-            uri: null,
-            link: null,
-          });
-        }
+      const response = await spotifyRequestWrapper('get', url, null, additionalHeaders);
+
+      if (response.tracks && Array.isArray(response.tracks.items) && response.tracks.items.length > 0) {
+        const track = response.tracks.items[0];
+        return {
+          title: track.name,
+          artist: track.artists.map((a: any) => a.name).join(', '),
+          uri: track.uri,
+          link: track.href,
+        };
+      } else {
+        return {
+          title: song.name,
+          artist: song.artist,
+          uri: null,
+          link: null,
+        };
+      }
     } catch (error) {
       console.error(`Failed to search for ${song.name} by ${song.artist}:`, error);
-      throw error
-  }
-  }
+      return {
+        title: song.name,
+        artist: song.artist,
+        uri: null,
+        link: null,
+      };
+    }
+  });
 
+  const validatedTracks = await Promise.all(trackPromises);
   return validatedTracks;
-  
 }
 

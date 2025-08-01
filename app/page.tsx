@@ -2,20 +2,20 @@
 
 import React from "react";
 import { useStore } from "./store/store";
-import ConnectSpotifyModal from "@/app/components/ConnectSpotifyModal";
 import { useSearchParams } from "next/navigation";
 import { requestAccessToken } from "@/api/spotify";
 import Hero from "./components/Hero";
 import { AIGenerator } from "./components/AIGenerator";
 import GeneratedPlaylist from "./components/GeneratedPlaylist";
-import { getSessionStorage } from "./utils/getLocalStorage";
 import { toast } from "sonner";
+import LoadingScreen from "./components/LoadingScreen";
+import ConnectSpotifyAlert from "./components/ConnectSpotifyAlert";
 
 
 export default function Home() {
 
   const searchParams = useSearchParams()
-  const { spotifyModalActive,playlist } = useStore();
+  const { spotifyModalActive,playlist, loading, setSpotifyModalActive } = useStore();
 
   React.useEffect(()=>{ 
     const state = searchParams.get('state')
@@ -26,7 +26,7 @@ export default function Home() {
       toast("You need to login to you spotify account!")
     }
     if(state != null && code != null){
-      const stateCode = getSessionStorage('stateCode')
+      const stateCode = sessionStorage.getItem('stateCode')
       if (stateCode == null) {
         return 
       }else if (stateCode != state) {
@@ -45,6 +45,7 @@ export default function Home() {
  
   return (
     <div className="main-div pb-20">
+        {loading && <LoadingScreen />}
         <div className="blobs blob1"></div>
         <div className="blobs blob2"></div>
         <div className="blobs blob3"></div>
@@ -56,7 +57,7 @@ export default function Home() {
       <section>
         {playlist ? <GeneratedPlaylist /> : <AIGenerator />}
       </section>
-      {spotifyModalActive && <ConnectSpotifyModal /> }
+      {spotifyModalActive && <ConnectSpotifyAlert setSpotifyModalActive={setSpotifyModalActive} /> }
     </div>
   );
 }

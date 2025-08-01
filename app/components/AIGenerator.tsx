@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Music, Wand2 } from 'lucide-react';
 import { Validate } from '../types/validate';
 import { useStore } from '../store/store';
+import { Card } from './CardGradient';
 
 export const AIGenerator = () => {
 
@@ -52,7 +53,7 @@ export const AIGenerator = () => {
 
 
   return (
-    <div className='card-gradient w-1/2 mx-auto mt-12 p-8 rounded-xl border border-[#2e4635] shadow-elegant backdrop-blur-sm'>
+    <Card className='w-1/2 mx-auto mt-12 p-8'>
         <div className='text-center'>
             <h3 className='text-3xl font-bold text-white mb-2'>Playlist Generator</h3>
             <p className='text-muted'>Describe your mood and playlist vibes and let our AI create the perfect mix for you</p>
@@ -140,6 +141,7 @@ export const AIGenerator = () => {
             </>
           )}
         </Button>
-    </div>
+    </Card>
+    
   )
 }

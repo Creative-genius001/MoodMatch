@@ -1,17 +1,13 @@
-import { Headphones, Github } from "lucide-react";
+import { Headphones, Github, LockKeyhole } from "lucide-react";
 import { Button } from "./ui/button";
 import { spotifyAuth } from "@/api/spotify";
 import Link from "next/link";
 
 const Hero = () => {
 
-  const handleConnectToSpotify = () => {
-    spotifyAuth();
-  }
-
   return (
     <div className="w-1/2 mx-auto pt-[170px]">
-        <div className="relative z-10 text-center space-y-6 px-6 max-w-4xl">
+        <div className="relative flex flex-col items-center z-10 text-center space-y-6 px-6 max-w-4xl">
         <div className="space-y-4">
           <h1 className="lg:text-5xl md:text-4xl font-light text-white">
             The Future of Music Discovery
@@ -23,7 +19,7 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-          <Button onClick={handleConnectToSpotify} variant="hero" size="lg" className="text-lg px-8 py-6">
+          <Button onClick={()=> spotifyAuth()} variant="hero" size="lg" className="text-lg px-8 py-6">
             <Headphones className="w-6 h-6" />
             Connect Spotify
           </Button>
@@ -34,6 +30,8 @@ const Hero = () => {
             </Button>
           </Link>
         </div>
+
+        <span className="flex items-center"><LockKeyhole className="w-4 h-4 mr-2 text-brightGreen" /> <p className="text-sm text-brightGreen">Securely connected to Spotify. We never store your personal data.</p></span>
 
     </div>
     </div>
