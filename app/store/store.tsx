@@ -34,6 +34,7 @@ type StoreContextValue = {
   generatePlaylist: (mood : string, genre: string, desc: string, trackNum: number) => void;
   addSongsToSpotifyPlaylist: () => Promise<boolean | undefined>;
   regeneratePlaylist: () => void;
+  closeGeneratedPlaylist: () => void;
 }
 
 const StoreContext = createContext<StoreContextValue | null>(null);
@@ -72,6 +73,12 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
         setLoading(false)
         toast("Failed to generate playlist. Try again!")
       }
+    }
+
+    const closeGeneratedPlaylist = () => {
+      sessionStorage.removeItem("recommended-playlist");
+      sessionStorage.removeItem("prompt");
+      setPlaylist(null)
     }
 
     const generatePlaylist = async (mood : string, genre: string, desc: string, trackNum: number) => {
@@ -126,7 +133,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading, playlistLink, spotifyModalActive, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
+        <StoreContext.Provider value={{ loading, playlistLink, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
             {children}
         </StoreContext.Provider>
     );

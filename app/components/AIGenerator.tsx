@@ -53,9 +53,9 @@ export const AIGenerator = () => {
 
 
   return (
-    <Card className='w-1/2 mx-auto mt-12 p-8'>
+    <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
         <div className='text-center'>
-            <h3 className='text-3xl font-bold text-white mb-2'>Playlist Generator</h3>
+            <h3 className='text-2xl md:text-3xl font-bold text-white mb-3'>Playlist Generator</h3>
             <p className='text-muted'>Describe your mood and playlist vibes and let our AI create the perfect mix for you</p>
         </div>
         <div className='mt-6'>

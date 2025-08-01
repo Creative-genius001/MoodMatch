@@ -6,15 +6,15 @@ import Link from "next/link";
 const Hero = () => {
 
   return (
-    <div className="w-1/2 mx-auto pt-[170px]">
+    <div className="sm:w-[90%] md:w-1/2 mx-auto pt-[170px]">
         <div className="relative flex flex-col items-center z-10 text-center space-y-6 px-6 max-w-4xl">
         <div className="space-y-4">
-          <h1 className="lg:text-5xl md:text-4xl font-light text-white">
+          <h1 className="text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-light text-white">
             The Future of Music Discovery
           </h1>
         </div>
         
-        <p className="lg:text-lg md:text-base text-muted max-w-2xl mx-auto leading-relaxed">
+        <p className="md:text-base lg:text-lg text-muted max-w-2xl mx-auto leading-relaxed">
           Harness the power of AI to discover your perfect playlist. Connect with Spotify and let our advanced algorithms create personalized music experiences tailored just for you.
         </p>
 
@@ -31,7 +31,7 @@ const Hero = () => {
           </Link>
         </div>
 
-        <span className="flex items-center"><LockKeyhole className="w-4 h-4 mr-2 text-brightGreen" /> <p className="text-sm text-brightGreen">Securely connected to Spotify. We never store your personal data.</p></span>
+        <span className="flex flex-col md:flex-row justify-center items-center w-[70%] md:w-full"><LockKeyhole className="w-4 h-4 mr-2 text-brightGreen" /> <p className="text-sm text-brightGreen">Securely connected to Spotify. We never store your personal data.</p></span>
 
     </div>
     </div>

@@ -1,5 +1,5 @@
 // import React from 'react'
-import { FolderHeart } from 'lucide-react';
+import { FolderHeart, X } from 'lucide-react';
 import { Button } from './ui/button'
 import moment from 'moment';
 import { useStore } from '../store/store';
@@ -9,26 +9,27 @@ import { Card } from './CardGradient';
 
 const GeneratedPlaylist = () => {
 
-  const { playlist, regeneratePlaylist, addSongsToSpotifyPlaylist } = useStore();
+  const { playlist, regeneratePlaylist, addSongsToSpotifyPlaylist, closeGeneratedPlaylist } = useStore();
   
   let formattedDate = playlist?.generatedAt
   formattedDate = moment(formattedDate).format('DD/MM/YYYY')
 
   return (
-    <Card className='w-1/2 mx-auto mt-12 p-8'>
-        <div className='text-center'>
-            <h3 className='text-3xl font-bold text-white mb-2'>{playlist?.playlistName}</h3>
+    <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
+      <span onClick={()=> closeGeneratedPlaylist()} className='absolute top-5 right-4 text-muted flex items-center cursor-pointer'><p>Close</p> <X className='w-5 h-5 ' /></span>
+        <div className='text-left'>
+            <h3 className='text-2xl font-bold text-white mb-2'>{playlist?.playlistName}</h3>
             <p className='text-muted'>{playlist?.playlistDescription}</p>
         </div>
-        <div className="flex w-full items-center justify-center gap-2 text-sm opacity-75 mt-3">
+        <div className="flex w-full items-left justify-left gap-2 text-sm opacity-75 mt-3">
                 
-                <span className=" text-white">
+                <span className=" text-brightGreen">
                   {playlist?.genre}
                 </span>
                 <span>•</span>
-                <span>{playlist?.numberOfTracks} tracks</span>
+                <span className='text-[#d7ae34]'>{playlist?.numberOfTracks} tracks</span>
                 <span>•</span>
-                <span>Created at {formattedDate}</span>
+                <span className='text-[#d734c4]'>Created at {formattedDate}</span>
         </div>
         <div className='flex flex-col mt-6'>
             {playlist?.songs.map(track => (
