@@ -8,7 +8,7 @@ import { ValidatedTrack } from '@/app/types/type';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
-const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URL as string;
+const redirect_uri = "http://localhost:3000/"
 const baseURL = process.env.NEXT_PUBLIC_SPOTIFY_BASE_URL as string;
 
 
@@ -242,6 +242,7 @@ export async function searchForSongs(songs: SongProp[]): Promise<ValidatedTrack[
         const track = response.tracks.items[0];
         return {
           title: track.name,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           artist: track.artists.map((a: any) => a.name).join(', '),
           uri: track.uri,
           link: track.href,

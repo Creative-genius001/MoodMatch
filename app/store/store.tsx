@@ -118,7 +118,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
       try {
         setLoading(true)
-        const { snapshot_id, playlist_id, playlist_link } = await addPlaylistToSpotify(playlist.playlistName, playlist.playlistDescription, playlist.songs)
+        const { playlist_link } = await addPlaylistToSpotify(playlist.playlistName, playlist.playlistDescription, playlist.songs)
         setPlaylistLink(playlist_link);
         setLoading(false)
         toast('Playlist added successfully. Enjoy Listening!')
