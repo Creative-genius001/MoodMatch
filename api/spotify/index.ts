@@ -66,6 +66,11 @@ const spotifyRequestWrapper = async (method : string, url: string, data: object 
 
 export function spotifyAuth() {
 
+  const ID =localStorage.getItem('spotify-id')
+  if (ID != null){
+    console.log("user already connected")
+    return
+  }
   const state = generateRandomStrings(16);
   sessionStorage.setItem('stateCode', state)
   const scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private user-top-read';
