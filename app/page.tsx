@@ -10,12 +10,13 @@ import GeneratedPlaylist from "./components/GeneratedPlaylist";
 import { toast } from "sonner";
 import LoadingScreen from "./components/LoadingScreen";
 import ConnectSpotifyAlert from "./components/ConnectSpotifyAlert";
+import ListenInSpotifyAlert from "./components/ListenInSpotifyAlert";
 
 
 export default function Home() {
 
   const searchParams = useSearchParams()
-  const { spotifyModalActive,playlist, loading, setSpotifyModalActive } = useStore();
+  const { listenOnSpotifyModal, spotifyModalActive,playlist, loading, setSpotifyModalActive } = useStore();
 
   React.useEffect(()=>{ 
     const state = searchParams.get('state')
@@ -57,6 +58,7 @@ export default function Home() {
       <section>
         {playlist ? <GeneratedPlaylist /> : <AIGenerator />}
       </section>
+      {listenOnSpotifyModal && <ListenInSpotifyAlert />}
       {spotifyModalActive && <ConnectSpotifyAlert setSpotifyModalActive={setSpotifyModalActive} /> }
     </div>
   );

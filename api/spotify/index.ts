@@ -123,7 +123,7 @@ export async function requestAccessToken(code: string) {
 export async function getRefreshToken () {
     const local = getLocalStorage('access-data')
     if(!local) return null
-    const refreshToken = local.access_token;
+    const refreshToken = local.refresh_token;
 
     const authOptions = {
         method: 'POST',
