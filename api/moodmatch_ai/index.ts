@@ -1,8 +1,8 @@
-import { PlaylistProp } from '@/app/store/store';
+import { PlaylistProp } from '@/app/types/type';
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { prompt } from './prompt';
 
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY as string;
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_API as string;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
@@ -23,7 +23,7 @@ export const getSongRecommendation = async (mood : string, genre: string, desc :
     return(data);
   } catch (error) {
     console.error(error)
-    throw new Error("Server is overloaded currently")
+    throw error
   }
   
 }

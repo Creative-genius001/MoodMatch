@@ -3,19 +3,20 @@ import generateRandomStrings from "@/app/utils/generateRandomString";
 import { redirect } from 'next/navigation';
 import axios from 'axios';
 import getLocalStorage from '@/app/utils/getLocalStorage';
-import { SongProp } from '@/app/store/store';
+import { IPlaylist, PlaylistProp, SongProp } from '@/app/types/type';
 import { ValidatedTrack } from '@/app/types/type';
+import { savePlaylist } from '@/app/database/db';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
-const redirect_uri = "https://moodmatch-ai.vercel.app/callback"
+const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URL as string;
 const baseURL = process.env.NEXT_PUBLIC_SPOTIFY_BASE_URL as string;
 
 
 const spotifyRequestWrapper = async (method : string, url: string, data: object | null = null, additionalHeaders: Record<string, string> = {}) => {
     const local = getLocalStorage('access-data')
     if(!local) return null
-    let accessToken = local.access_token;
+    const accessToken = local.access_token;
 
   try {
     const headers = {
@@ -37,10 +38,10 @@ const spotifyRequestWrapper = async (method : string, url: string, data: object 
       console.log('Access token expired. Refreshing...');
 
       try {
-        accessToken = await getRefreshToken();
+        const newAccessToken = await getRefreshToken();
 
         const headers = {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${newAccessToken}`,
           ...additionalHeaders,
         };
 
@@ -211,16 +212,30 @@ export async function addSongsToPlaylist (playlistId: string, uris: string[]) {
 }   
 
 
-export async function addPlaylistToSpotify (name: string, description: string, songs: SongProp[]) {
-  const validatedTracks = await searchForSongs(songs).catch((e)=> {throw e})
+export async function addPlaylistToSpotify (playlist: PlaylistProp) {
+  const validatedTracks = await searchForSongs(playlist.songs).catch((e)=> {throw e})
   
   const validUris = validatedTracks
       .filter((track): track is ValidatedTrack & { uri: string } => track.uri !== null)
       .map((track) => track.uri);
 
     
-  const {playlistID, playlistLink} = await createPlaylist(name, description).catch((e)=> { throw e})
+  const {playlistID, playlistLink} = await createPlaylist(playlist.title, playlist.description).catch((e)=> { throw e})
   const snapshotID = await addSongsToPlaylist(playlistID, validUris).catch((e)=> { throw e})
+
+  const playlistFormatted: IPlaylist = {
+    title: playlist.title,
+    description: playlist.description,
+    href: playlistLink,
+    tags: playlist.tags,
+    snapshotId: snapshotID,
+    songs: validatedTracks,
+    genre: playlist.genre,
+    numberOfTracks: playlist.numberOfTracks,
+    generatedAt: playlist.generatedAt
+  }
+
+  savePlaylist(playlistFormatted)
     
   return ({snapshot_id : snapshotID, playlist_id: playlistID, playlist_link: playlistLink})
 }

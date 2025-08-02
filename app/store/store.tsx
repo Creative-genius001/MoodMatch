@@ -5,23 +5,8 @@ import { addPlaylistToSpotify } from '@/api/spotify';
 import getLocalStorage, { getSessionStorage } from '@/app/utils/getLocalStorage';
 import { toast } from "sonner"
 import React, { createContext, useContext, ReactNode } from 'react';
+import { PlaylistProp } from '../types/type';
 
-
-export type SongProp = {
-  name: string,
-  artist: string,
-  spotifyURI: string
-}
-
-export type PlaylistProp = {
-    playlistName: string,
-    playlistDescription: string,
-    genre: string,
-    numberOfTracks: number,
-    tags: Array<string>,
-    generatedAt: string,
-    songs: Array<SongProp>
-}
 
 type StoreContextValue = {
   loading: boolean;
@@ -62,20 +47,25 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
           throw ("user prompt not found!")
       }
 
-      try {
-        setLoading(true)
-        let playlist = await getSongRecommendation(prompt.mood, prompt.genre, prompt.desc, prompt.trackNum);
-        
-        playlist = {...playlist, generatedAt: new Date().toISOString()}
-        sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
-        setPlaylist(playlist)
-        setLoading(false) 
+      setTimeout(async ()=> {
+        try {
+          setLoading(true)
+          let playlist = await getSongRecommendation(prompt.mood, prompt.genre, prompt.desc, prompt.trackNum);
+          
+          playlist = {...playlist, generatedAt: new Date().toISOString()}
+          sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
+          setPlaylist(playlist)
+          setLoading(false) 
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (err) {
-        setLoading(false)
-        toast("Failed to generate playlist. Try again!")
-      }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+          setLoading(false)
+          toast("Failed to generate playlist. Try again!")
+        } finally {
+          setLoading(false)
+        }
+      },2000)
+
     }
 
     const closeGeneratedPlaylist = () => {
@@ -94,12 +84,14 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
         playlist = {...playlist, generatedAt: new Date().toISOString()}
         sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
         setPlaylist(playlist)
-        setLoading(false) 
+        setLoading(false)
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setLoading(false)
         toast("Failed to generate playlist. Try again!")
+      }finally {
+          setLoading(false)
       }
     }
 
@@ -118,7 +110,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
       try {
         setLoading(true)
-        const { playlist_link } = await addPlaylistToSpotify(playlist.playlistName, playlist.playlistDescription, playlist.songs)
+        const { playlist_link } = await addPlaylistToSpotify(playlist)
         setPlaylistLink(playlist_link);
         setLoading(false)
         toast('Playlist added successfully. Enjoy Listening!')
@@ -132,6 +124,8 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
           setLoading(false)
           toast('Error creating playlist')
           return false
+      }finally {
+          setLoading(false)
       }
       
     }

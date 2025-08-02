@@ -9,8 +9,8 @@ Respond ONLY with a valid JSON object using the exact structure below. All field
 
 \`\`\`json
 {
-  "playlistName": "string",
-  "playlistDescription": "string",
+  "title": "string",
+  "description": "string",
   "genre": "string",
   "numberOfTracks": number,
   "tags": ["string", "string", "string"],
@@ -32,7 +32,7 @@ PLAYLIST GENERATION GUIDELINES:
 🎵 Song Selection:
 - Carefully curate songs that embody the user's mood, genre, and activity/vibe.
 - Do NOT return random or generic popular tracks.
-- Include both well-known and hidden gems for a balanced experience.
+- Include both well-known and hidden gems for a balanced experience. If user specifies the generation he/she needs songs from e.g 80's ,90's- then do just that.
 
 🔗 Spotify URIs:
 - For each track, return the most accurate \`spotifyURI\` you can.
