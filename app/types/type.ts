@@ -60,35 +60,3 @@ export interface IPlaylist {
   songs: Array<ValidatedTrack>
   generatedAt: string
 }
-
-
-export const mockPlaylist: IPlaylist = {
-  title: "Vibe & Flow",
-  description: "A chill mix of alt-pop and R&B to get lost in.",
-  genre: "Alternative",
-  href: "https://open.spotify.com/playlist/xyz123",
-  snapshotId: "snapshot_001",
-  numberOfTracks: 3,
-  tags: ["chill", "alt-pop", "evening"],
-  songs: [
-    {
-      title: "Breezeblocks",
-      artist: "alt-J",
-      uri: "spotify:track:3RkQ3UwOyPqpJiFg88o7UN",
-      link: "https://open.spotify.com/track/3RkQ3UwOyPqpJiFg88o7UN"
-    },
-    {
-      title: "Nights",
-      artist: "Frank Ocean",
-      uri: "spotify:track:3xKsf9qdS1CyvXSMEid6g8",
-      link: "https://open.spotify.com/track/3xKsf9qdS1CyvXSMEid6g8"
-    },
-    {
-      title: "The Less I Know The Better",
-      artist: "Tame Impala",
-      uri: "spotify:track:3B54sVLJ402zGa6Xm4YGNe",
-      link: "https://open.spotify.com/track/3B54sVLJ402zGa6Xm4YGNe"
-    }
-  ],
-  generatedAt: new Date().toISOString()
-};
