@@ -219,6 +219,9 @@ export async function addPlaylistToSpotify (playlist: PlaylistProp) {
       .filter((track): track is ValidatedTrack & { uri: string } => track.uri !== null)
       .map((track) => track.uri);
 
+  const validTracks = validatedTracks
+      .filter((track): track is ValidatedTrack & { uri: string } => track.uri !== null)
+      .map((track) => track);
     
   const {playlistID, playlistLink} = await createPlaylist(playlist.title, playlist.description).catch((e)=> { throw e})
   const snapshotID = await addSongsToPlaylist(playlistID, validUris).catch((e)=> { throw e})
@@ -229,7 +232,7 @@ export async function addPlaylistToSpotify (playlist: PlaylistProp) {
     href: playlistLink,
     tags: playlist.tags,
     snapshotId: snapshotID,
-    songs: validatedTracks,
+    songs: validTracks,
     genre: playlist.genre,
     numberOfTracks: playlist.numberOfTracks,
     generatedAt: playlist.generatedAt
