@@ -234,7 +234,7 @@ export async function addPlaylistToSpotify (playlist: PlaylistProp) {
     snapshotId: snapshotID,
     songs: validTracks,
     genre: playlist.genre,
-    numberOfTracks: playlist.numberOfTracks,
+    numberOfTracks: validTracks.length,
     generatedAt: playlist.generatedAt
   }
 
@@ -266,6 +266,7 @@ export async function searchForSongs(songs: SongProp[]): Promise<ValidatedTrack[
           link: track.href,
         };
       } else {
+        console.log({title: song.name, artist: song.artist, error: "Could not get the valid uris and link from spotify"})
         return {
           title: song.name,
           artist: song.artist,
