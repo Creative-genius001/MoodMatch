@@ -246,6 +246,8 @@ html {
     --gradient-secondary: linear-gradient(135deg, hsl(280 85% 65%), hsl(320 85% 65%));
     --gradient-hero: linear-gradient(135deg, hsl(210 15% 8%) 0%, hsl(210 25% 15%) 50%, hsl(150 30% 20%) 100%);
     --gradient-card: linear-gradient(135deg, hsl(210 20% 12%) 0%, hsl(210 25% 18%) 100%);
+    
+    --background-dark: #041008;
 
     --primary-glow: 150 90% 60%;
 
@@ -256,6 +258,8 @@ html {
 
     --dark-primary: #0b160e;
     --dark-transparent: #08100a93;
+
+    --dashboard-sidebar: #0d150f;
 
     --accent: 320 85% 65%;
     --accent-foreground: 210 15% 95%;
