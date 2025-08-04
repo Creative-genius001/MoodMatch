@@ -1,53 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Textarea } from './ui/textarea'
-import { genres, moods } from '../types/type';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
-import { Mic, Music, SendHorizontal, Wand2 } from 'lucide-react';
-import { Validate } from '../types/validate';
+import React, { useEffect, useRef, useState } from 'react';
+import { SendHorizontal } from 'lucide-react';
 import { useStore } from '../store/store';
-import { Card } from './CardGradient';
-import Dropdown from './Dropdown';
+import PromptCard from './PromptCard';
 
 export const AIGenerator = () => {
 
     const { generatePlaylist, loading } = useStore();
 
     const [prompt, setPrompt] = useState("");
-    const [mood, setMood] = useState("");
-    const [genre, setGenre] = useState("");
-    const [trackNum, setTrackNum] = useState("");
-      const textareaRef = useRef(null);
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = event.target.value;
-
-      let numericValue: number;
-      if (inputValue === '') {
-        numericValue = NaN; 
-      } else {
-        numericValue = parseFloat(inputValue);
-      }
-
-      if (!isNaN(numericValue)) {
-        if (numericValue > 30) {
-          numericValue = 30;
-        } else if (numericValue < 0) {
-          numericValue = 10;
-        }
-        setTrackNum(numericValue.toString());
-      } else if (inputValue === '') {
-        setTrackNum("");
-      } else {
-        setTrackNum("");
-      }
-  };
+    const textareaRef = useRef(null);
 
 
 
-  // This useEffect hook dynamically resizes the textarea height
-  // to match the content's scroll height.
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'; // Reset height to recalculate
@@ -64,8 +28,7 @@ export const AIGenerator = () => {
   const handleSendPrompt = () => {
     if (prompt.trim()) {
       console.log('Sending prompt:', prompt);
-      // Here you would typically send the prompt to an API
-      // and then clear the input.
+      generatePlaylist(prompt)
       setPrompt('');
     }
   };
@@ -79,22 +42,29 @@ export const AIGenerator = () => {
     }
   };
 
-  const handleGenerate = async () => {
-    const isValid = Validate({prompt, mood, genre, trackNum})
-    if (!isValid) {
-        console.error("Empty fields or invalid input")
-        return
-    } 
-    generatePlaylist(mood, genre, prompt, parseFloat(trackNum))
-  };
+  const demoPrompt: string[] = [
+  "I'm in a reflective mood and want chill, acoustic songs for a quiet night drive. Make it feel like Bon Iver meets Phoebe Bridgers",
+  
+  "I just got out of a breakup and need an emotional playlist to cry and heal to. Think sad pop or indie with strong lyrics. Include artists like Olivia Rodrigo and Mitski",
+  
+  "Give me gym motivation songs with a dark, intense vibe—something like Travis Scott or Kanye during his Yeezus era. Genre should be aggressive trap or industrial rap. I want high-energy tracks to push through my workout"
+  ];
+
 
 
   return (
-    <div className='w-[400px]  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-4 '>
-      <div className="w-full relative max-w-4xl flex items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">
-        
-        {/* The textarea is styled to grow and handle user input. */}
-        <textarea
+
+    <div className="flex flex-col justify-center items-center mt-[12rem] w-full">
+      <h1 className="text-3xl font-light">What type of playlist would you like?</h1>
+            <div className="flex w-[80%] mx-auto justify-around items-center mt-8 ">
+              {demoPrompt.map((prompt, index) => (
+                <PromptCard key={index} prompt={prompt} />
+              ))}
+            </div>
+      <div className='w-[400px]  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-4 '>
+      <div className="w-full relative max-w-4xl flex items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">    
+
+      <textarea
           ref={textareaRef}
           value={prompt}
           onChange={handlePromptChange}
@@ -104,13 +74,10 @@ export const AIGenerator = () => {
           rows={1}
           style={{ lineHeight: '1.5rem', maxHeight: '10rem' }}
         />
-        {/* <div className='absolute bottom-0 left-0'>
-          <Dropdown />
-        </div> */}
         
         <button
           onClick={handleSendPrompt}
-          disabled={!prompt.trim()}
+          disabled={!prompt.trim() || loading}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200 ease-in-out
             ${prompt.trim() 
               ? 'bg-brightGreen text-white hover:bg-brightGreen' 
@@ -122,75 +89,7 @@ export const AIGenerator = () => {
           <SendHorizontal size={20} />
         </button>
       </div>
-        {/* <div className='mt-6'>
-          <label className="block text-sm font-medium text-foreground mb-3">
-            Select a mood
-          </label>
-          <div className="grid grid-cols-3 gap-2">
-            {moods.map((moodOption) => (
-              <Button
-                key={moodOption}
-                onClick={() => setMood(moodOption)}
-                className={`${mood === moodOption ? "bg-brightGreen text-dark50 hover:bg-brightGreen hover:shadow-glow-primary transition-all ease-out" : "bg-dark50 text-white"} text-sm`}
-              >
-                {moodOption}
-              </Button>
-            ))}
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4 mt-6">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Genre
-            </label>
-            <Select onValueChange={setGenre} >
-                <SelectTrigger className="w-full py-5">
-                    <SelectValue placeholder="Select a genre" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                    <SelectLabel>Genres</SelectLabel>
-                    { genres.map(g => (
-                        <SelectItem key={g} value={g}>{g}</SelectItem>
-                    )) }
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Number of tracks
-            </label>
-            <Input
-                onChange={handleChange}
-                type="number" 
-                max="30"
-                value={trackNum}
-                className="bg-white border-border/50 py-5 focus:border-primary text-dark50"
-            />
-          </div>
-        </div>
-
-        <Button
-          onClick={handleGenerate}
-          disabled={!prompt || loading}
-          variant="hero"
-          size="lg"
-          className="w-full text-lg py-6 z-10 mt-8"
-        >
-          {loading ? (
-            <>
-              <Music className="w-5 h-5 animate-spin" />
-              Generating Your Perfect Playlist...
-            </>
-          ) : (
-            <>
-              <Wand2 className="w-5 h-5" />
-              Generate AI Playlist
-            </>
-          )}
-        </Button> */}
+    </div>
     </div>
     
   )

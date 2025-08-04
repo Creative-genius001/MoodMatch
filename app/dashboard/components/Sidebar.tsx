@@ -24,8 +24,8 @@ console.log(pathname)
   return (
     <div className="w-64 h-screen fixed top-0 left-0 z-50 bg-dashboard-sidebar border-r border-border flex flex-col">
       <div className="p-6 border-b border-border">
-        <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Analytics Suite</p>
+        <h1 className="text-xl font-bold text-foreground">Moodmatch AI</h1>
+        <p className="text-sm text-muted-foreground">Best AI playlist generator</p>
       </div>
       
       <nav className="flex-1 p-4 space-y-2">

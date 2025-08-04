@@ -217,7 +217,7 @@ export async function addSongsToPlaylist (playlistId: string, uris: string[]) {
 }   
 
 
-export async function addPlaylistToSpotify (playlist: PlaylistProp) {
+export async function addPlaylistToSpotify (playlist: PlaylistProp, spotifyId: string) {
   const validatedTracks = await searchForSongs(playlist.songs).catch((e)=> {throw e})
   
   const validUris = validatedTracks
@@ -236,6 +236,7 @@ export async function addPlaylistToSpotify (playlist: PlaylistProp) {
     description: playlist.description,
     href: playlistLink,
     tags: playlist.tags,
+    spotifyId,
     snapshotId: snapshotID,
     songs: validTracks,
     genre: playlist.genre,

@@ -15,8 +15,8 @@ const model = genAI.getGenerativeModel({
 
 
 
-export const getSongRecommendation = async (mood : string, genre: string, desc : string, trackNum: number) =>{
-  const AIPrompt: string = prompt + mood + genre + desc + trackNum
+export const getSongRecommendation = async (userPrompt : string) =>{
+  const AIPrompt: string = prompt.replace('{USER_PROMPT}', userPrompt);
   try {
     const result = await model.generateContent(AIPrompt);
     const data = JSON.parse(result.response.text()) as PlaylistProp;

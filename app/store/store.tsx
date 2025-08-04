@@ -5,8 +5,9 @@ import { addPlaylistToSpotify, getUserTopArtists, getUserTopSongs } from '@/api/
 import getLocalStorage, { getSessionStorage } from '@/app/utils/getLocalStorage';
 import { toast } from "sonner"
 import React, { createContext, useContext, ReactNode } from 'react';
-import { PlaylistProp } from '../types/type';
+import { IPlaylist, PlaylistProp } from '../types/type';
 import { ITopArtist, ITopSong } from '@/api/spotify/types/types';
+import { getAllPlaylist } from '../database/db';
 
 
 type StoreContextValue = {
@@ -15,13 +16,14 @@ type StoreContextValue = {
   playlist: PlaylistProp | null;
   topSongs: ITopSong[] | null;
   topArtists: ITopArtist[] | null;
+  generatedPlaylist: IPlaylist[] | null;
   playlistLink: string;
   listenOnSpotifyModal: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setSpotifyModalActive: React.Dispatch<React.SetStateAction<boolean>>;
   setListenOnSpotifyModal: React.Dispatch<React.SetStateAction<boolean>>;
   setPlaylist: React.Dispatch<React.SetStateAction<PlaylistProp | null>>;
-  generatePlaylist: (mood : string, genre: string, desc: string, trackNum: number) => void;
+  generatePlaylist: (prompt: string) => void;
   addSongsToSpotifyPlaylist: () => Promise<boolean | undefined>;
   getTopData: () => void;
   regeneratePlaylist: () => void;
@@ -42,24 +44,37 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     const [listenOnSpotifyModal, setListenOnSpotifyModal] = React.useState<boolean>(false);
     const [playlistLink, setPlaylistLink] = React.useState<string>("");
     const [playlist, setPlaylist] = React.useState<PlaylistProp | null>(null);
+    const [generatedPlaylist, setGeneratedPlaylist] = React.useState<IPlaylist[] | null>(null);
     const [topSongs, setTopSongs] = React.useState<ITopSong[] | null>(null);
     const [topArtists, setTopArtists] = React.useState<ITopArtist[] | null>(null);
 
 
 
     const getTopData = async () => {
+
+      const spotifyID = getLocalStorage('spotify-id')
+
       if (topSongs == null || topArtists == null){
         const resS = await getUserTopSongs();
         setTopSongs(resS)
 
         const resA = await getUserTopArtists();
         setTopArtists(resA)
+
+        if(!spotifyID) {
+          setSpotifyModalActive(true)
+          return
+        }
+
+        // const resP = await getAllPlaylist(spotifyID)
+        // setGeneratedPlaylist(resP)
         return
       } else {
         return
-      }
-      
+      }   
     }
+
+
 
     const regeneratePlaylist = async () => {
 
@@ -71,7 +86,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
       setTimeout(async ()=> {
         try {
           setLoading(true)
-          let playlist = await getSongRecommendation(prompt.mood, prompt.genre, prompt.desc, prompt.trackNum);
+          let playlist = await getSongRecommendation(prompt);
           
           playlist = {...playlist, generatedAt: new Date().toISOString()}
           sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
@@ -95,12 +110,12 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
       setPlaylist(null)
     }
 
-    const generatePlaylist = async (mood : string, genre: string, desc: string, trackNum: number) => {
-      const promptJSON = {mood, genre, desc, trackNum}
-      sessionStorage.setItem('prompt', JSON.stringify(promptJSON))
+    const generatePlaylist = async (prompt: string) => {
+
+      sessionStorage.setItem('prompt', JSON.stringify(prompt))
       setLoading(true)
       try {
-        let playlist = await getSongRecommendation(mood, genre, desc, trackNum);
+        let playlist = await getSongRecommendation(prompt);
         
         playlist = {...playlist, generatedAt: new Date().toISOString()}
         sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
@@ -124,6 +139,12 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
           setSpotifyModalActive(true)
           return
       }
+
+      const spotifyID = localStorage.getItem('spotify-id')
+      if(!spotifyID) {
+          setSpotifyModalActive(true)
+          return
+      }
       if (playlist === null) {
           console.error("Playlist not found. Null value")
           return false
@@ -131,7 +152,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
       try {
         setLoading(true)
-        const { playlist_link } = await addPlaylistToSpotify(playlist)
+        const { playlist_link } = await addPlaylistToSpotify(playlist, spotifyID)
         setPlaylistLink(playlist_link);
         setLoading(false)
         toast('Playlist added successfully. Enjoy Listening!')
@@ -152,7 +173,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
+        <StoreContext.Provider value={{ loading, generatedPlaylist, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
             {children}
         </StoreContext.Provider>
     );

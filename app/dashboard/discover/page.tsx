@@ -3,10 +3,13 @@
 import ArtistCard from "@/app/components/ArtistCard";
 import SongCard from "@/app/components/SongCard";
 import { useStore } from "@/app/store/store";
+import { useGetAllData } from "../hooks/useGetAllData";
 
 const Page = () => {
 
   const { topSongs, topArtists } = useStore();
+
+  useGetAllData()
 
   return (
     <main className='overflow-y-auto flex flex-col text-white'>
