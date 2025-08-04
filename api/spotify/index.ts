@@ -18,10 +18,9 @@ const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1';
 const spotifyRequestWrapper = async (method : string, path: string, data: object | null = null, additionalHeaders: Record<string, string> = {}) => {
 
   const url = SPOTIFY_BASE_URL+path
-  console.log(url)
-    const local = getLocalStorage('access-data')
+  const local = getLocalStorage('access-data')
     if(!local) return null
-    const accessToken = local.access_token;
+  const accessToken = local.access_token;
 
   try {
     const headers = {
@@ -112,7 +111,6 @@ export async function requestAccessToken(code: string) {
     await axios.post(url, form, { headers })
         .then(res => {
             const { data } = res;
-            console.log(data)
             localStorage.setItem('access-data', JSON.stringify(data))
             getSpotifyId();
             redirect('/')

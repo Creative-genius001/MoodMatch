@@ -54,24 +54,29 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
       const spotifyID = getLocalStorage('spotify-id')
 
-      if (topSongs == null || topArtists == null){
+      if (topSongs == null){    
         const resS = await getUserTopSongs();
         setTopSongs(resS)
-
+      } 
+      
+      if (topArtists == null) {
         const resA = await getUserTopArtists();
         setTopArtists(resA)
-
+      }
+      
+      if (generatedPlaylist == null){
         if(!spotifyID) {
           setSpotifyModalActive(true)
           return
         }
 
-        // const resP = await getAllPlaylist(spotifyID)
-        // setGeneratedPlaylist(resP)
+        const resP = await getAllPlaylist(spotifyID)
+        setGeneratedPlaylist(resP)
         return
-      } else {
+      } 
+      else {
         return
-      }   
+      }
     }
 
 
@@ -140,7 +145,8 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
           return
       }
 
-      const spotifyID = localStorage.getItem('spotify-id')
+      let spotifyID = getLocalStorage('spotify-id');
+      spotifyID = spotifyID.replace(/^"|"$/g, "");
       if(!spotifyID) {
           setSpotifyModalActive(true)
           return

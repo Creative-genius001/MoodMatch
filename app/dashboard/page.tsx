@@ -9,7 +9,7 @@ import { useGetAllData } from "./hooks/useGetAllData";
 export default function DashboardHomePage() {
 
   useGetAllData()
-  const { listenOnSpotifyModal, spotifyModalActive,playlist, loading, setSpotifyModalActive } = useStore();
+  const { playlist } = useStore();
 
   return (
     <main className="flex justify-center items-center text-white">

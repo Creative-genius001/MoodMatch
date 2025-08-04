@@ -1,7 +1,9 @@
+'use client'
 import React, { useEffect, useRef, useState } from 'react';
 import { SendHorizontal } from 'lucide-react';
 import { useStore } from '../store/store';
 import PromptCard from './PromptCard';
+import Spinner from './Spinner';
 
 export const AIGenerator = () => {
 
@@ -19,25 +21,22 @@ export const AIGenerator = () => {
     }
   }, [prompt]);
 
-  // Handler for when the user types in the textarea.
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
   };
 
-  // Handler for sending the prompt.
   const handleSendPrompt = () => {
     if (prompt.trim()) {
-      console.log('Sending prompt:', prompt);
       generatePlaylist(prompt)
       setPrompt('');
     }
   };
 
-  // Handler for the Enter key.
-  const handleKeyDown = (e) => {
-    // Check for Enter key without Shift key to send the message.
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleKeyDown = (e: any) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevent a new line from being added
+      e.preventDefault(); 
       handleSendPrompt();
     }
   };
@@ -86,7 +85,7 @@ export const AIGenerator = () => {
           `}
           aria-label="Send prompt"
         >
-          <SendHorizontal size={20} />
+          {loading ? <Spinner /> : <SendHorizontal size={20} /> }
         </button>
       </div>
     </div>

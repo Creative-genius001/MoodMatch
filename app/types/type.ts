@@ -61,3 +61,17 @@ export interface IPlaylist {
   songs: Array<ValidatedTrack>
   generatedAt: string
 }
+
+export interface IPlaylistDB {
+  id: string,
+  title: string,
+  description: string,
+  genre: string,
+  href: string,
+  spotifyId: string,
+  snapshotId: string,
+  numberOfTracks: number,
+  tags: Array<string>,
+  songs: Array<ValidatedTrack>
+  generatedAt: string
+}

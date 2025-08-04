@@ -2,7 +2,7 @@ import { Button } from "@/app/components/ui/button";
 import { 
   BrainCog, 
   LibraryBig, 
-  Settings, 
+  // Settings, 
   FileMusic
 } from "lucide-react";
 import Link from "next/link";
@@ -12,13 +12,12 @@ const menuItems = [
   { icon: BrainCog, label: "MoodMatch AI", href: "/dashboard", name:"dashbaord" },
   { icon: LibraryBig, label: "Discover" , href: "/dashboard/discover", name:"discover"},
   { icon: FileMusic, label: "My Playlists" , href: "/dashboard/playlists", name:"playlists"},
-  { icon: Settings, label: "Settings", href: "/dashboard/settings", name:"settings" },
+  // { icon: Settings, label: "Settings", href: "/dashboard/settings", name:"settings" },
 ];
 
 const Sidebar = () => {
 
-const pathname = usePathname(); 
-console.log(pathname)
+const pathname = usePathname();
 
 
   return (

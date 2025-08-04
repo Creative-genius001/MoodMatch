@@ -1,21 +1,22 @@
-// import React from 'react'
 import { FolderHeart, X } from 'lucide-react';
 import { Button } from './ui/button'
 import moment from 'moment';
 import { useStore } from '../store/store';
 import { Card } from './CardGradient';
-// import { ArrowLeft, Play } from 'lucide-react'
-// import Link from 'next/link'
+import LoadingScreen from './LoadingScreen';
+
 
 const GeneratedPlaylist = () => {
 
-  const { playlist, regeneratePlaylist, addSongsToSpotifyPlaylist, closeGeneratedPlaylist } = useStore();
+  const { playlist, regeneratePlaylist, addSongsToSpotifyPlaylist, closeGeneratedPlaylist, loading } = useStore();
   
   let formattedDate = playlist?.generatedAt
   formattedDate = moment(formattedDate).format('DD/MM/YYYY')
 
   return (
-    <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
+    <>
+    {loading && <LoadingScreen />}
+      <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
       <span onClick={()=> closeGeneratedPlaylist()} className='absolute top-5 right-4 text-muted flex items-center cursor-pointer'><p>Close</p> <X className='w-5 h-5 ' /></span>
         <div className='text-left'>
             <h3 className='text-2xl font-bold text-white mb-2'>{playlist?.title}</h3>
@@ -48,6 +49,7 @@ const GeneratedPlaylist = () => {
         </div>
 
     </Card>
+    </>
   )
 }
 
