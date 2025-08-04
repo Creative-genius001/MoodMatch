@@ -6,14 +6,19 @@ import getLocalStorage from '@/app/utils/getLocalStorage';
 import { IPlaylist, PlaylistProp, SongProp } from '@/app/types/type';
 import { ValidatedTrack } from '@/app/types/type';
 import { savePlaylist } from '@/app/database/db';
+import { ITopArtist, ITopSong } from './types/types';
 
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID as string;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET as string;
-const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URL as string;
+const redirect_uri = 'http://localhost:3000/callback';
 const baseURL = process.env.NEXT_PUBLIC_SPOTIFY_BASE_URL as string;
+const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1';
 
 
-const spotifyRequestWrapper = async (method : string, url: string, data: object | null = null, additionalHeaders: Record<string, string> = {}) => {
+const spotifyRequestWrapper = async (method : string, path: string, data: object | null = null, additionalHeaders: Record<string, string> = {}) => {
+
+  const url = SPOTIFY_BASE_URL+path
+  console.log(url)
     const local = getLocalStorage('access-data')
     if(!local) return null
     const accessToken = local.access_token;
@@ -148,7 +153,7 @@ export async function getRefreshToken () {
 
 export async function getSpotifyId () {
 
-    const url = 'https://api.spotify.com/v1/me';
+    const url = '/me';
     const additionalHeaders = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
@@ -170,7 +175,7 @@ export async function createPlaylist (name: string, description: string): Promis
     if(!userId) {
         userId = await getSpotifyId()
     }
-    const url = `https://api.spotify.com/v1/users/${userId}/playlists`;
+    const url = `/users/${userId}/playlists`;
     const additionalHeaders = {
         'Content-Type': 'application/json'
     }
@@ -195,7 +200,7 @@ export async function createPlaylist (name: string, description: string): Promis
 }
 
 export async function addSongsToPlaylist (playlistId: string, uris: string[]) {
-    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
+    const url = `/playlists/${playlistId}/tracks`
     const data = {
         uris,
     }
@@ -251,7 +256,7 @@ export async function searchForSongs(songs: SongProp[]): Promise<ValidatedTrack[
 
   const trackPromises = songs.map(async (song) => {
     const query = `track:"${song.name}" artist:"${song.artist}"`;
-    const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`;
+    const url = `/search?q=${encodeURIComponent(query)}&type=track&limit=1`;
 
     try {
       const response = await spotifyRequestWrapper('get', url, null, additionalHeaders);
@@ -289,3 +294,58 @@ export async function searchForSongs(songs: SongProp[]): Promise<ValidatedTrack[
   return validatedTracks;
 }
 
+export async function getUserTopSongs(): Promise<ITopSong[]> {
+  const additionalHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const url = '/me/top/tracks?limit=10';
+
+  try {
+    const response = await spotifyRequestWrapper('get', url, null, additionalHeaders);
+    const topSongs: ITopSong[] = [];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    response.items.forEach((item: any) => {
+      const song: ITopSong = {
+        name: item.name,
+        href: item.external_urls.spotify,
+        image: item.album.images[1].url,
+        uri: item.uri,
+        artist: item.artists[0].name,
+      };
+      topSongs.push(song);
+    });
+    return topSongs;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function getUserTopArtists(): Promise<ITopArtist[]> {
+  const additionalHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const url = '/me/top/artists?limit=10';
+
+  try {
+    const response = await spotifyRequestWrapper('get', url, null, additionalHeaders);
+    const topArtists: ITopArtist[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    response.items.forEach((item: any) => {
+      const artist: ITopArtist = {
+        name: item.name,
+        href: item.external_urls.spotify,
+        image: item.images[1].url,
+        uri: item.uri,
+      };
+      topArtists.push(artist);
+    });
+    return topArtists;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

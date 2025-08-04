@@ -1,17 +1,20 @@
 'use client'
 
 import { getSongRecommendation } from '@/api/moodmatch_ai';
-import { addPlaylistToSpotify } from '@/api/spotify';
+import { addPlaylistToSpotify, getUserTopArtists, getUserTopSongs } from '@/api/spotify';
 import getLocalStorage, { getSessionStorage } from '@/app/utils/getLocalStorage';
 import { toast } from "sonner"
 import React, { createContext, useContext, ReactNode } from 'react';
 import { PlaylistProp } from '../types/type';
+import { ITopArtist, ITopSong } from '@/api/spotify/types/types';
 
 
 type StoreContextValue = {
   loading: boolean;
   spotifyModalActive: boolean;
   playlist: PlaylistProp | null;
+  topSongs: ITopSong[] | null;
+  topArtists: ITopArtist[] | null;
   playlistLink: string;
   listenOnSpotifyModal: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,6 +23,7 @@ type StoreContextValue = {
   setPlaylist: React.Dispatch<React.SetStateAction<PlaylistProp | null>>;
   generatePlaylist: (mood : string, genre: string, desc: string, trackNum: number) => void;
   addSongsToSpotifyPlaylist: () => Promise<boolean | undefined>;
+  getTopData: () => void;
   regeneratePlaylist: () => void;
   closeGeneratedPlaylist: () => void;
 }
@@ -38,7 +42,24 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     const [listenOnSpotifyModal, setListenOnSpotifyModal] = React.useState<boolean>(false);
     const [playlistLink, setPlaylistLink] = React.useState<string>("");
     const [playlist, setPlaylist] = React.useState<PlaylistProp | null>(null);
+    const [topSongs, setTopSongs] = React.useState<ITopSong[] | null>(null);
+    const [topArtists, setTopArtists] = React.useState<ITopArtist[] | null>(null);
 
+
+
+    const getTopData = async () => {
+      if (topSongs == null || topArtists == null){
+        const resS = await getUserTopSongs();
+        setTopSongs(resS)
+
+        const resA = await getUserTopArtists();
+        setTopArtists(resA)
+        return
+      } else {
+        return
+      }
+      
+    }
 
     const regeneratePlaylist = async () => {
 
@@ -131,7 +152,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading, playlistLink, setListenOnSpotifyModal,listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
+        <StoreContext.Provider value={{ loading, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
             {children}
         </StoreContext.Provider>
     );

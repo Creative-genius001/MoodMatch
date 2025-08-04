@@ -90,7 +90,7 @@ export const AIGenerator = () => {
 
 
   return (
-    <div className='w-[400px]  bg-dark50 rounded-3xl md:w-[680px] mt-12 p-4 '>
+    <div className='w-[400px]  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-4 '>
       <div className="w-full relative max-w-4xl flex items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">
         
         {/* The textarea is styled to grow and handle user input. */}

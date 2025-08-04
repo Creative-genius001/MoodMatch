@@ -1,10 +1,31 @@
-import React from 'react'
+'use client'
+
+import ArtistCard from "@/app/components/ArtistCard";
+import SongCard from "@/app/components/SongCard";
+import { useStore } from "@/app/store/store";
 
 const Page = () => {
+
+  const { topSongs, topArtists } = useStore();
+
   return (
-    <main className='overflow-y-auto'>
-      <h1 className="text-4xl font-bold text-gray-900">Dashboard Discover</h1>
-      <p className="mt-4 text-gray-700">Welcome to your personalized dashboard. Use the sidebar to navigate to different sections.</p>
+    <main className='overflow-y-auto flex flex-col text-white'>
+      <div>
+        <h1 className="text-2xl font-bold">Your Top Songs</h1>
+        <div className="grid grid-cols-6 gap-y-2 mt-3">
+          {topSongs && topSongs.map(song=>(
+            <SongCard key={song.uri} song={song} />
+          ))}
+        </div>
+      </div>
+      <div className="mt-12">
+        <h1 className="text-2xl font-bold">Your Top Artists</h1>
+        <div className="grid grid-cols-6 gap-y-2 mt-3">
+          {topArtists && topArtists.map(artist=>(
+            <ArtistCard key={artist.uri} artist={artist} />
+          ))}
+        </div>
+      </div>
     </main>
   )
 }

@@ -3,15 +3,15 @@ import {
   BrainCog, 
   LibraryBig, 
   Settings, 
-  Bell
+  FileMusic
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const menuItems = [
-  { icon: BrainCog, label: "MoodMatch AI", href: "/dashboard", name:"dashbaord", active: true },
+  { icon: BrainCog, label: "MoodMatch AI", href: "/dashboard", name:"dashbaord" },
   { icon: LibraryBig, label: "Discover" , href: "/dashboard/discover", name:"discover"},
-  { icon: Bell, label: "Favourites" , href: "/dashboard/favourites", name:"favourites"},
+  { icon: FileMusic, label: "My Playlists" , href: "/dashboard/playlists", name:"playlists"},
   { icon: Settings, label: "Settings", href: "/dashboard/settings", name:"settings" },
 ];
 
@@ -43,7 +43,7 @@ console.log(pathname)
         ))}
       </nav>
       
-      <div className="p-4 border-t border-border">
+      {/* <div className="p-4 border-t border-border">
         <div className="bg-gradient-card p-4 rounded-lg">
           <h3 className="text-sm font-medium text-foreground mb-2">Upgrade Plan</h3>
           <p className="text-xs text-muted-foreground mb-3">Get unlimited access to all features</p>
@@ -51,7 +51,7 @@ console.log(pathname)
             Upgrade Now
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
