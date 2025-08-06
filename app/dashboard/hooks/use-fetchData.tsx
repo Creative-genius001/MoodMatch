@@ -7,5 +7,6 @@ export function useGetAllData() {
 
     useEffect(()=> {
         getTopData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 }

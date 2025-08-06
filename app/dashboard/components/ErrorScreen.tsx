@@ -1,4 +1,3 @@
-import React from 'react'
 
 const ErrorScreen = (props: {message: string}) => {
   return (
