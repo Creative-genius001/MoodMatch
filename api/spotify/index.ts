@@ -71,8 +71,8 @@ const spotifyRequestWrapper = async (method : string, path: string, data: object
 
 export function spotifyAuth() {
 
-  const ID =localStorage.getItem('spotify-id')
-  if (ID != null){
+  const local = getLocalStorage('access_data')
+  if(local && local.refresh_token != null){
     console.log("user already connected")
     return
   }
