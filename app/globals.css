@@ -17,12 +17,10 @@ html {
   overflow-x: hidden;
 }
 
-
-
 .main-div{
   width: 100vw;
   /* min-height: 100vh; */
-  height: auto;
+  height: 100vh;
   position: relative;
   background: #041008;
   overflow: hidden;
@@ -107,24 +105,37 @@ html {
 }
 
 
-.loader {
-  width: 45px;
+.spinner {
+  width: 30px;
+  padding: 4px;
   aspect-ratio: 1;
-  --c:no-repeat repeating-linear-gradient(90deg,#2EC47A 0 calc(100%/7),#0000 0 calc(200%/7));
-  background: var(--c),var(--c),var(--c),var(--c);
-  background-size: 140% 26%;
-  animation: l26 .75s infinite linear;
+  border-radius: 50%;
+  background: var(--green-primary);
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
 }
-@keyframes l26 {
- 0%,
- 5%   {background-position:0    calc(0*100%/3),0    calc(1*100%/3),0    calc(2*100%/3),0    calc(3*100%/3)}
- 20%  {background-position:50%  calc(0*100%/3),0    calc(1*100%/3),0    calc(2*100%/3),0    calc(3*100%/3)}
- 40%  {background-position:100% calc(0*100%/3),50%  calc(1*100%/3),0    calc(2*100%/3),0    calc(3*100%/3)}
- 60%  {background-position:100% calc(0*100%/3),100% calc(1*100%/3),50%  calc(2*100%/3),0    calc(3*100%/3)}
- 80%  {background-position:100% calc(0*100%/3),100% calc(1*100%/3),100% calc(2*100%/3),50%  calc(3*100%/3)}
- 95%,
- 100% {background-position:100% calc(0*100%/3),100% calc(1*100%/3),100% calc(2*100%/3),100% calc(3*100%/3)}
+@keyframes l3 {to{transform: rotate(1turn)}}
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: 
+    radial-gradient(farthest-side, var(--green-primary) 94%,#0000) top/8px 8px no-repeat,
+    conic-gradient(#0000 30%, var(--green-primary));
+  -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+  animation: l13 1s infinite linear;
 }
+@keyframes l13{ 
+  100%{transform: rotate(1turn)}
+}
+
 
 @keyframes l40{
   0%,100% {
@@ -246,6 +257,8 @@ html {
     --gradient-secondary: linear-gradient(135deg, hsl(280 85% 65%), hsl(320 85% 65%));
     --gradient-hero: linear-gradient(135deg, hsl(210 15% 8%) 0%, hsl(210 25% 15%) 50%, hsl(150 30% 20%) 100%);
     --gradient-card: linear-gradient(135deg, hsl(210 20% 12%) 0%, hsl(210 25% 18%) 100%);
+    
+    --background-dark: #041008;
 
     --primary-glow: 150 90% 60%;
 
@@ -256,6 +269,8 @@ html {
 
     --dark-primary: #0b160e;
     --dark-transparent: #08100a93;
+
+    --dashboard-sidebar: #0d150f;
 
     --accent: 320 85% 65%;
     --accent-foreground: 210 15% 95%;

@@ -21,6 +21,9 @@ const buttonVariants = cva(
         hero: "bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow-primary animate-glow-pulse font-semibold",
         neon: "bg-transparent border-2 border-accent text-accent transition-all duration-300 shadow-glow-secondary",
         link: "text-primary underline-offset-4 hover:underline",
+        dashboard: "bg-gradient-accent text-foreground hover:opacity-90 shadow-card transition-smooth",
+        sidebar: "bg-transparent text-white  rounded-3xl hover:text-foreground justify-start w-full transition-smooth",
+        metric: "bg-card/50 text-foreground hover:bg-card border border-border transition-smooth",
       },
       size: {
         default: "h-9 px-4 py-2",

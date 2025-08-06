@@ -1,147 +1,93 @@
-import React, { useState } from 'react'
-import { Textarea } from './ui/textarea'
-import { genres, moods } from '../types/type';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
-import { Music, Wand2 } from 'lucide-react';
-import { Validate } from '../types/validate';
+'use client'
+import React, { useEffect, useRef, useState } from 'react';
+import { SendHorizontal } from 'lucide-react';
 import { useStore } from '../store/store';
-import { Card } from './CardGradient';
+import PromptCard from './PromptCard';
+import Spinner from './Spinner';
 
 export const AIGenerator = () => {
 
-    const { generatePlaylist, loading } = useStore();
+    const { generatePlaylist, gettingPrompt } = useStore();
 
     const [prompt, setPrompt] = useState("");
-    const [mood, setMood] = useState("");
-    const [genre, setGenre] = useState("");
-    const [trackNum, setTrackNum] = useState("");
+    const textareaRef = useRef(null);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = event.target.value;
 
-      let numericValue: number;
-      if (inputValue === '') {
-        numericValue = NaN; 
-      } else {
-        numericValue = parseFloat(inputValue);
-      }
 
-      if (!isNaN(numericValue)) {
-        if (numericValue > 30) {
-          numericValue = 30;
-        } else if (numericValue < 0) {
-          numericValue = 10;
-        }
-        setTrackNum(numericValue.toString());
-      } else if (inputValue === '') {
-        setTrackNum("");
-      } else {
-        setTrackNum("");
-      }
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'; // Reset height to recalculate
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [prompt]);
+
+  const handlePromptChange = (e) => {
+    setPrompt(e.target.value);
   };
 
-  const handleGenerate = async () => {
-    const isValid = Validate({prompt, mood, genre, trackNum})
-    if (!isValid) {
-        console.error("Empty fields or invalid input")
-        return
-    } 
-    generatePlaylist(mood, genre, prompt, parseFloat(trackNum))
+  const handleSendPrompt = () => {
+    if (prompt.trim()) {
+      generatePlaylist(prompt)
+      setPrompt('');
+    }
   };
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); 
+      handleSendPrompt();
+    }
+  };
+
+  const demoPrompt: string[] = [
+    "I'm in a reflective mood and want chill, acoustic songs for a quiet night drive. Make it feel like Bon Iver meets Phoebe Bridgers",
+    "I just got out of a breakup and need an emotional playlist to cry and heal to. Think sad pop or indie with strong lyrics. Include artists like Olivia Rodrigo and Mitski",
+    "Give me gym motivation songs with a dark, intense vibe—something like Travis Scott or Kanye during his Yeezus era. Genre should be aggressive trap or industrial rap. I want high-energy tracks to push through my workout"
+  ];
+
 
 
   return (
-    <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
-        <div className='text-center'>
-            <h3 className='text-2xl md:text-3xl font-bold text-white mb-3'>Playlist Generator</h3>
-            <p className='text-muted'>Describe your mood and playlist vibes and let our AI create the perfect mix for you</p>
-        </div>
-        <div className='mt-6'>
-            <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                    Describe your ideal playlist
-                </label>
-                <Textarea
-                    placeholder="I want upbeat electronic music for my morning workout..."
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    className="min-h-[100px] bg-transparent text-brightGreen border-border focus:border-brightGreen"
-                />
-            </div>
-        </div>
-        
-        <div className='mt-6'>
-          <label className="block text-sm font-medium text-foreground mb-3">
-            Select a mood
-          </label>
-          <div className="grid grid-cols-3 gap-2">
-            {moods.map((moodOption) => (
-              <Button
-                key={moodOption}
-                onClick={() => setMood(moodOption)}
-                className={`${mood === moodOption ? "bg-brightGreen text-dark50 hover:bg-brightGreen hover:shadow-glow-primary transition-all ease-out" : "bg-dark50 text-white"} text-sm`}
-              >
-                {moodOption}
-              </Button>
-            ))}
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4 mt-6">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Genre
-            </label>
-            <Select onValueChange={setGenre} >
-                <SelectTrigger className="w-full py-5">
-                    <SelectValue placeholder="Select a genre" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectGroup>
-                    <SelectLabel>Genres</SelectLabel>
-                    { genres.map(g => (
-                        <SelectItem key={g} value={g}>{g}</SelectItem>
-                    )) }
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Number of tracks
-            </label>
-            <Input
-                onChange={handleChange}
-                type="number" 
-                max="30"
-                value={trackNum}
-                className="bg-white border-border/50 py-5 focus:border-primary text-dark50"
-            />
-          </div>
-        </div>
 
-        <Button
-          onClick={handleGenerate}
-          disabled={!prompt || loading}
-          variant="hero"
-          size="lg"
-          className="w-full text-lg py-6 z-10 mt-8"
+    <div className="flex flex-col justify-center items-center mt-[12rem] w-full">
+      <h1 className="text-2xl md:text-3xl font-light">What type of playlist would you like?</h1>
+            <div className="flex flex-col md:flex-row w-full md:w-[80%] mx-auto justify-around gap-3 items-center mt-8 ">
+              {demoPrompt.map((prompt, index) => (
+                <PromptCard key={index} prompt={prompt} />
+              ))}
+            </div>
+      <div className='w-full  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-2 '>
+      <div className="w-full relative max-w-4xl flex items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">    
+
+      <textarea
+          ref={textareaRef}
+          value={prompt}
+          onChange={handlePromptChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Enter a prompt here..."
+          className="flex-grow resize-none p-2 text-base outline-none bg-transparent overflow-hidden max-h-40"
+          rows={1}
+          style={{ lineHeight: '1.5rem', maxHeight: '10rem' }}
+        />
+        
+        <button
+          onClick={handleSendPrompt}
+          disabled={!prompt.trim() || gettingPrompt}
+          className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200 ease-in-out
+            ${prompt.trim() 
+              ? 'bg-brightGreen text-white hover:bg-brightGreen' 
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }
+          `}
+          aria-label="Send prompt"
         >
-          {loading ? (
-            <>
-              <Music className="w-5 h-5 animate-spin" />
-              Generating Your Perfect Playlist...
-            </>
-          ) : (
-            <>
-              <Wand2 className="w-5 h-5" />
-              Generate AI Playlist
-            </>
-          )}
-        </Button>
-    </Card>
+          {gettingPrompt ? <Spinner /> : <SendHorizontal size={20} /> }
+        </button>
+      </div>
+    </div>
+    </div>
     
   )
 }

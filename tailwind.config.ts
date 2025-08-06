@@ -16,6 +16,8 @@ export default {
   			darkTransparent: 'var(--dark-transparent)',
   			blue50: 'var(--blue50)',
 			brightGreen: 'var(--green-primary)',
+			'dashboard-sidebar': 'var(--dashboard-sidebar)',
+			'background-dark': 'var(--background-dark)',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

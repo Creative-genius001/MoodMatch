@@ -3,8 +3,6 @@
 import React from "react";
 import { useStore } from "./store/store";
 import Hero from "./components/Hero";
-import { AIGenerator } from "./components/AIGenerator";
-import GeneratedPlaylist from "./components/GeneratedPlaylist";
 import LoadingScreen from "./components/LoadingScreen";
 import ConnectSpotifyAlert from "./components/ConnectSpotifyAlert";
 import ListenInSpotifyAlert from "./components/ListenInSpotifyAlert";
@@ -12,7 +10,7 @@ import ListenInSpotifyAlert from "./components/ListenInSpotifyAlert";
 
 export default function Home() {
 
-  const { listenOnSpotifyModal, spotifyModalActive,playlist, loading, setSpotifyModalActive } = useStore();
+  const { listenOnSpotifyModal, spotifyModalActive, loading, setSpotifyModalActive } = useStore();
 
 
  
@@ -26,9 +24,6 @@ export default function Home() {
         <div className="blobs blob5"></div>
       <section>
         <Hero />
-      </section>
-      <section>
-        {playlist ? <GeneratedPlaylist /> : <AIGenerator />}
       </section>
       {listenOnSpotifyModal && <ListenInSpotifyAlert />}
       {spotifyModalActive && <ConnectSpotifyAlert setSpotifyModalActive={setSpotifyModalActive} /> }

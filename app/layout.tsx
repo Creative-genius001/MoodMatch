@@ -28,7 +28,7 @@ export default function RootLayout({
           <AppStoreProvider>
               {children}
               <Toaster />
-            <Footer />
+            {/* <Footer /> */}
           </AppStoreProvider>
       </body>
     </html>
