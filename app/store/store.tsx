@@ -14,6 +14,7 @@ type StoreContextValue = {
   loading: boolean;
   gettingPrompt: boolean;
   spotifyModalActive: boolean;
+  isAuthenticated: boolean;
   playlist: PlaylistProp | null;
   topSongs: ITopSong[] | null;
   topArtists: ITopArtist[] | null;
@@ -23,6 +24,7 @@ type StoreContextValue = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setSpotifyModalActive: React.Dispatch<React.SetStateAction<boolean>>;
   setListenOnSpotifyModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   setPlaylist: React.Dispatch<React.SetStateAction<PlaylistProp | null>>;
   generatePlaylist: (prompt: string) => void;
   addSongsToSpotifyPlaylist: () => Promise<boolean | undefined>;
@@ -41,6 +43,7 @@ type StoreProviderProps = {
 export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
     const [gettingPrompt, setGettingPrompt] = React.useState<boolean>(false);
     const [spotifyModalActive, setSpotifyModalActive] = React.useState<boolean>(false);
     const [listenOnSpotifyModal, setListenOnSpotifyModal] = React.useState<boolean>(false);
@@ -55,6 +58,9 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     const getTopData = async () => {
     const rawSpotifyID = getLocalStorage('spotify-id');
     const spotifyID = rawSpotifyID?.replace(/^"|"$/g, "");
+    if(!isAuthenticated){
+      return;
+    }
 
     try {
       setLoading(true);
@@ -195,7 +201,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading,gettingPrompt, generatedPlaylist, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
+        <StoreContext.Provider value={{ loading, isAuthenticated, setIsAuthenticated, gettingPrompt, generatedPlaylist, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
             {children}
         </StoreContext.Provider>
     );

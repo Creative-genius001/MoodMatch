@@ -113,7 +113,7 @@ export async function requestAccessToken(code: string) {
             const { data } = res;
             localStorage.setItem('access-data', JSON.stringify(data))
             getSpotifyId();
-            redirect('/')
+            redirect('/dashboard/')
         })
         .catch(error => {
             console.error('Could not get access token', error)

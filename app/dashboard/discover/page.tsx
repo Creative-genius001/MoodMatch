@@ -5,6 +5,7 @@ import { useGetAllData } from "../hooks/use-fetchData";
 import LoadingScreen from "@/app/components/LoadingScreen";
 import ErrorScreen from "../components/ErrorScreen";
 import Discover from "./components/Discover";
+import AuthGuard from "@/app/components/AuthGuard";
 
 const Page = () => {
 
@@ -13,17 +14,18 @@ const Page = () => {
   useGetAllData()
 
   return (
+    <AuthGuard>
+      <main className="px-4">
+        {loading ? (
+          <LoadingScreen />
+        ) : topArtists && topSongs ? (
+          <Discover topArtists={topArtists} topSongs={topSongs} />
+        ) : (
+          <ErrorScreen message="Data could not be loaded. Please check your internet connection and try again." />
+        )}
 
-    <main className="px-4">
-      {loading ? (
-        <LoadingScreen />
-      ) : topArtists && topSongs ? (
-        <Discover topArtists={topArtists} topSongs={topSongs} />
-      ) : (
-        <ErrorScreen message="Data could not be loaded. Please check your internet connection and try again." />
-      )}
-
-    </main>
+      </main>
+    </AuthGuard>
    
   )
 }

@@ -20,7 +20,7 @@ html {
 .main-div{
   width: 100vw;
   /* min-height: 100vh; */
-  height: auto;
+  height: 100vh;
   position: relative;
   background: #041008;
   overflow: hidden;
