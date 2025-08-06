@@ -14,7 +14,7 @@ const GeneratedPlaylist = () => {
   formattedDate = moment(formattedDate).format('DD/MM/YYYY')
 
   return (
-    <>
+    <div className='pt-10 pb-8'>
     {loading && <LoadingScreen />}
       <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
       <span onClick={()=> closeGeneratedPlaylist()} className='absolute top-5 right-4 text-muted flex items-center cursor-pointer'><p>Close</p> <X className='w-5 h-5 ' /></span>
@@ -49,7 +49,7 @@ const GeneratedPlaylist = () => {
         </div>
 
     </Card>
-    </>
+    </div>
   )
 }
 

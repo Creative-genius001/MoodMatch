@@ -12,6 +12,7 @@ import { getAllPlaylist } from '../database/db';
 
 type StoreContextValue = {
   loading: boolean;
+  gettingPrompt: boolean;
   spotifyModalActive: boolean;
   playlist: PlaylistProp | null;
   topSongs: ITopSong[] | null;
@@ -40,6 +41,7 @@ type StoreProviderProps = {
 export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [gettingPrompt, setGettingPrompt] = React.useState<boolean>(false);
     const [spotifyModalActive, setSpotifyModalActive] = React.useState<boolean>(false);
     const [listenOnSpotifyModal, setListenOnSpotifyModal] = React.useState<boolean>(false);
     const [playlistLink, setPlaylistLink] = React.useState<string>("");
@@ -51,34 +53,52 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
 
 
     const getTopData = async () => {
+    const rawSpotifyID = getLocalStorage('spotify-id');
+    const spotifyID = rawSpotifyID?.replace(/^"|"$/g, "");
 
-      const spotifyID = getLocalStorage('spotify-id')
+    try {
+      setLoading(true);
 
-      if (topSongs == null){    
-        const resS = await getUserTopSongs();
-        setTopSongs(resS)
-      } 
-      
-      if (topArtists == null) {
-        const resA = await getUserTopArtists();
-        setTopArtists(resA)
+      if (!topSongs) {
+        try {
+          const resS = await getUserTopSongs();
+          setTopSongs(resS);
+        } catch (err) {
+          console.error("Error fetching top songs:", err);
+          setTopSongs(null); 
+        }
       }
+
+      if (!topArtists) {
+        try {
+          const resA = await getUserTopArtists();
+          setTopArtists(resA);
+        } catch (err) {
+          console.error("Error fetching top artists:", err);
+          setTopArtists(null);
+        }
+      }
+
       
-      if (generatedPlaylist == null){
-        if(!spotifyID) {
-          setSpotifyModalActive(true)
-          return
+      if (!generatedPlaylist) {
+        if (!spotifyID) {
+          console.warn("Spotify ID is missing");
+          setSpotifyModalActive(true);
+          return;
         }
 
-        const resP = await getAllPlaylist(spotifyID)
-        setGeneratedPlaylist(resP)
-        return
-      } 
-      else {
-        return
+        try {
+          const resP = await getAllPlaylist(spotifyID);
+          setGeneratedPlaylist(resP);
+        } catch (err) {
+          console.error("Error fetching playlist:", err);
+          setGeneratedPlaylist(null); 
+        }
       }
+    } finally {
+      setLoading(false); 
     }
-
+  };
 
 
     const regeneratePlaylist = async () => {
@@ -96,11 +116,9 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
           playlist = {...playlist, generatedAt: new Date().toISOString()}
           sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
           setPlaylist(playlist)
-          setLoading(false) 
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
-          setLoading(false)
           toast("Failed to generate playlist. Try again!")
         } finally {
           setLoading(false)
@@ -118,21 +136,19 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     const generatePlaylist = async (prompt: string) => {
 
       sessionStorage.setItem('prompt', JSON.stringify(prompt))
-      setLoading(true)
       try {
+        setGettingPrompt(true)
         let playlist = await getSongRecommendation(prompt);
         
         playlist = {...playlist, generatedAt: new Date().toISOString()}
         sessionStorage.setItem("recommended-playlist", JSON.stringify(playlist));
         setPlaylist(playlist)
-        setLoading(false)
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        setLoading(false)
         toast("Failed to generate playlist. Try again!")
       }finally {
-          setLoading(false)
+          setGettingPrompt(false)
       }
     }
 
@@ -179,7 +195,7 @@ export const AppStoreProvider = ({ children }: StoreProviderProps) => {
     }
   
     return (
-        <StoreContext.Provider value={{ loading, generatedPlaylist, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
+        <StoreContext.Provider value={{ loading,gettingPrompt, generatedPlaylist, playlistLink, getTopData, topArtists,  topSongs, setListenOnSpotifyModal, listenOnSpotifyModal, spotifyModalActive,closeGeneratedPlaylist, regeneratePlaylist, setSpotifyModalActive, setLoading, addSongsToSpotifyPlaylist, generatePlaylist, setPlaylist, playlist }}>
             {children}
         </StoreContext.Provider>
     );

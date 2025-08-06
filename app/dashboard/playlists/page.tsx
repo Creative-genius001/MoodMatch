@@ -1,25 +1,24 @@
 'use client'
 
-import { Card } from "@/app/components/ui/card";
+import LoadingScreen from "@/app/components/LoadingScreen";
 import { useStore } from "@/app/store/store";
+import PlaylistPage from "./components/PlaylistPage";
+import ErrorScreen from "../components/ErrorScreen";
 
 const Page = () => {
 
-  const { generatedPlaylist } = useStore();
+  const { loading, generatedPlaylist } = useStore();
 
   return (
-    <main className='overflow-y-auto flex flex-col text-white'>
-        <h1 className="text-2xl font-bold">Your Playlists</h1>
-        <div className="mt-3">
-            {generatedPlaylist && generatedPlaylist.map((playlist)=> (
-                <Card key={playlist.snapshotId} className="w-[400px] h-[180px] bg-[#ffffff09] p-4 cursor-pointer">
-                    <div>
-                        <h2 className="text-2xl text-white font-semibold leading-tight truncate">{playlist.title}</h2>
-                        <p className="text-muted mt-4">{playlist.description}</p>
-                    </div>
-                </Card>
-            ))}
-        </div>
+     <main className="px-4">
+      {loading ? (
+        <LoadingScreen />
+      ) : generatedPlaylist ? (
+        <PlaylistPage playlists={generatedPlaylist} />
+      ) : (
+        <ErrorScreen message="Data could not be loaded. Please check your internet connection and try again." />
+      )}
+
     </main>
   )
 }

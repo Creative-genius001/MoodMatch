@@ -7,7 +7,7 @@ import Spinner from './Spinner';
 
 export const AIGenerator = () => {
 
-    const { generatePlaylist, loading } = useStore();
+    const { generatePlaylist, gettingPrompt } = useStore();
 
     const [prompt, setPrompt] = useState("");
     const textareaRef = useRef(null);
@@ -42,11 +42,9 @@ export const AIGenerator = () => {
   };
 
   const demoPrompt: string[] = [
-  "I'm in a reflective mood and want chill, acoustic songs for a quiet night drive. Make it feel like Bon Iver meets Phoebe Bridgers",
-  
-  "I just got out of a breakup and need an emotional playlist to cry and heal to. Think sad pop or indie with strong lyrics. Include artists like Olivia Rodrigo and Mitski",
-  
-  "Give me gym motivation songs with a dark, intense vibe—something like Travis Scott or Kanye during his Yeezus era. Genre should be aggressive trap or industrial rap. I want high-energy tracks to push through my workout"
+    "I'm in a reflective mood and want chill, acoustic songs for a quiet night drive. Make it feel like Bon Iver meets Phoebe Bridgers",
+    "I just got out of a breakup and need an emotional playlist to cry and heal to. Think sad pop or indie with strong lyrics. Include artists like Olivia Rodrigo and Mitski",
+    "Give me gym motivation songs with a dark, intense vibe—something like Travis Scott or Kanye during his Yeezus era. Genre should be aggressive trap or industrial rap. I want high-energy tracks to push through my workout"
   ];
 
 
@@ -54,13 +52,13 @@ export const AIGenerator = () => {
   return (
 
     <div className="flex flex-col justify-center items-center mt-[12rem] w-full">
-      <h1 className="text-3xl font-light">What type of playlist would you like?</h1>
-            <div className="flex w-[80%] mx-auto justify-around items-center mt-8 ">
+      <h1 className="text-2xl md:text-3xl font-light">What type of playlist would you like?</h1>
+            <div className="flex flex-col md:flex-row w-full md:w-[80%] mx-auto justify-around gap-3 items-center mt-8 ">
               {demoPrompt.map((prompt, index) => (
                 <PromptCard key={index} prompt={prompt} />
               ))}
             </div>
-      <div className='w-[400px]  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-4 '>
+      <div className='w-full  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-2 '>
       <div className="w-full relative max-w-4xl flex items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">    
 
       <textarea
@@ -76,7 +74,7 @@ export const AIGenerator = () => {
         
         <button
           onClick={handleSendPrompt}
-          disabled={!prompt.trim() || loading}
+          disabled={!prompt.trim() || gettingPrompt}
           className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200 ease-in-out
             ${prompt.trim() 
               ? 'bg-brightGreen text-white hover:bg-brightGreen' 
@@ -85,7 +83,7 @@ export const AIGenerator = () => {
           `}
           aria-label="Send prompt"
         >
-          {loading ? <Spinner /> : <SendHorizontal size={20} /> }
+          {gettingPrompt ? <Spinner /> : <SendHorizontal size={20} /> }
         </button>
       </div>
     </div>
