@@ -8,7 +8,7 @@ export const useAuth = () => {
   useEffect(() => {
    
     const local = getLocalStorage('access-data');
-    if(!local || local.access_token == null){
+    if(!local && local.request_token == null){
         setIsAuthenticated(false);
     }else {
         setIsAuthenticated(true);
