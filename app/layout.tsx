@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import Footer from "@/app/components/Footer";
 import { AppStoreProvider } from "./store/store";
 import { Toaster } from "sonner";
 
@@ -28,7 +27,6 @@ export default function RootLayout({
           <AppStoreProvider>
               {children}
               <Toaster />
-            {/* <Footer /> */}
           </AppStoreProvider>
       </body>
     </html>

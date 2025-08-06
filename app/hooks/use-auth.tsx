@@ -13,6 +13,7 @@ export const useAuth = () => {
     }else {
         setIsAuthenticated(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { isAuthenticated };

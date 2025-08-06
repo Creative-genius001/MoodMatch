@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { SendHorizontal } from 'lucide-react';
 import { useStore } from '../store/store';
 import PromptCard from './PromptCard';
@@ -13,15 +13,7 @@ export const AIGenerator = () => {
     const textareaRef = useRef(null);
 
 
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'; // Reset height to recalculate
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  }, [prompt]);
-
-  const handlePromptChange = (e) => {
+  const handlePromptChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setPrompt(e.target.value);
   };
 

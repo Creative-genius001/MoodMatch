@@ -1,4 +1,3 @@
-// components/CardModal.tsx
 import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import { IPlaylist } from "@/app/types/type";

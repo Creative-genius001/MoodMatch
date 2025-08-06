@@ -1,4 +1,3 @@
-import React from 'react'
 
 const PromptCard = (props :{prompt : string}) => {
   return (
