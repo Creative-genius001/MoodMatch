@@ -6,7 +6,7 @@ import { ITopSong } from '@/api/spotify/types/types'
 const SongCard = (prop: {song: ITopSong}) => {
   const { name, artist, image  } = prop.song;
   return (
-    <Card className='w-[160px] md:w-[190px] h-[230px] md:h-[250px] p-2 bg-transparent hover:bg-[#ffffff09] border-none'>
+    <Card className='w-[120px] md:w-[190px] h-[200px] md:h-[250px] p-2 bg-transparent hover:bg-[#ffffff09] border-none'>
       <div>
         <Image
           src={image}

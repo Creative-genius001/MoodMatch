@@ -44,7 +44,7 @@ export const AIGenerator = () => {
   return (
 
     <div className="flex flex-col justify-center items-center mt-[12rem] w-full">
-      <h1 className="text-2xl md:text-3xl font-light">What type of playlist would you like?</h1>
+      <h1 className="text-2xl md:text-3xl font-light text-center">What type of playlist would you like?</h1>
             <div className="flex flex-col md:flex-row w-full md:w-[80%] mx-auto justify-around gap-3 items-center mt-8 ">
               {demoPrompt.map((prompt, index) => (
                 <PromptCard key={index} prompt={prompt} />
