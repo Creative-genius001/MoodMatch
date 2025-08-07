@@ -6,7 +6,7 @@ import Image from 'next/image'
 const ArtistCard = (prop: {artist: ITopArtist}) => {
   const { name , image  } = prop.artist;
   return (
-    <Card className='w-[120px] md:w-[170px] h-[180px] md:h-[200px] p-2 bg-transparent hover:bg-[#ffffff09] border-none'>
+    <Card className='w-[83px] md:w-[170px] h-[180px] md:h-[200px] p-2 bg-transparent hover:bg-[#ffffff09] border-none'>
       <div className='h-[130px] rounded-xl overflow-hidden bg-center bg-cover'>
         <Image
           src={image}

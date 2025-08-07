@@ -1,7 +1,7 @@
 import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import { IPlaylist } from "@/app/types/type";
-import { FolderHeart, X } from "lucide-react";
+import { FolderHeart } from "lucide-react";
 import moment from "moment";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ const CardModal = ({ playlist, onClose }: CardModalProps) => {
     formattedDate = moment(formattedDate).format('DD/MM/YYYY')
 
   return (
-    <div className="absolute top-0 left-0 z-[100] w-full min-h-screen flex justify-center items-center backdrop-blur-md px-4 ">
+    <div onClick={onClose} className="absolute top-0 left-0 z-[100] w-full min-h-screen flex justify-center items-center backdrop-blur-md px-4 ">
         <Card className="w-full md:w-[500px] h-[400px] bg-[#ffffff09] p-4 overflow-y-scroll [&::-webkit-scrollbar]:w-2
         [&::-webkit-scrollbar-track]:rounded-full
         [&::-webkit-scrollbar-track]:bg-gray-100
@@ -24,7 +24,6 @@ const CardModal = ({ playlist, onClose }: CardModalProps) => {
         [&::-webkit-scrollbar-thumb]:bg-gray-300
         dark:[&::-webkit-scrollbar-track]:bg-neutral-700
         dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-            <span onClick={onClose} className='absolute top-5 right-8 font-bold text-white flex items-center cursor-pointer'><p>Close</p> <X className='w-5 h-5 ' /></span>
         <div className='text-left'>
             <h3 className='text-2xl font-bold text-white mb-2'>{playlist?.title}</h3>
             <p className='text-muted'>{playlist?.description}</p>
