@@ -50,8 +50,8 @@ export const AIGenerator = () => {
                 <PromptCard key={index} prompt={prompt} />
               ))}
             </div>
-      <div className='w-full  bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-2 '>
-      <div className="w-full relative max-w-4xl flex items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">    
+      <div className='w-full bg-[#253727] rounded-3xl md:w-[680px] mt-8 p-2 '>
+      <div className="w-full relative max-w-4xl flex p-2 items-end bg-transparent border border-none rounded-3xl shadow-sm overflow-hidden transition-all duration-300 ease-in-out">    
 
       <textarea
           ref={textareaRef}
@@ -59,9 +59,15 @@ export const AIGenerator = () => {
           onChange={handlePromptChange}
           onKeyDown={handleKeyDown}
           placeholder="Enter a prompt here..."
-          className="flex-grow resize-none p-2 text-base outline-none bg-transparent overflow-hidden max-h-40"
+          className="flex-grow resize-none p-2 text-base outline-none bg-transparent overflow-y-auto max-h-40 [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-gray-100
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-gray-300
+          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
           rows={1}
-          style={{ lineHeight: '1.5rem', maxHeight: '10rem' }}
+          style={{ lineHeight: '1.5rem' }}
         />
         
         <button
