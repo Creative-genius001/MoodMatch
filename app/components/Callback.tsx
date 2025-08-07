@@ -15,21 +15,21 @@ const code = searchParams.get('code')
 const error = searchParams.get('error')
 
     if (error != null) {
-        router.push('/')
+        router.replace('/')
     }
     if(state != null && code != null){
       const stateCode = sessionStorage.getItem('stateCode')
       if (stateCode == null) {
-        router.push('/')
+        router.replace('/')
       }else if (stateCode != state) {
-        router.push('/')
+        router.replace('/')
       }else {
         requestAccessToken(code);
       }
 
     }
     else{
-        router.push('/')
+        router.replace('/')
       return;
     }
 },[searchParams, router])
