@@ -15,8 +15,7 @@ const GeneratedPlaylist = () => {
 
   return (
     <div className='pt-10 pb-8'>
-    {loading && <LoadingScreen />}
-      <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
+    {loading ? <LoadingScreen />: <Card className='w-[95%] md:w-1/2 mx-auto mt-12 py-8 px-4 md:p-8 '>
       <span onClick={()=> closeGeneratedPlaylist()} className='absolute top-5 right-4 text-muted flex items-center cursor-pointer'><p>Close</p> <X className='w-5 h-5 ' /></span>
         <div className='text-left'>
             <h3 className='text-2xl font-bold text-white mb-2'>{playlist?.title}</h3>
@@ -48,7 +47,8 @@ const GeneratedPlaylist = () => {
             </Button>
         </div>
 
-    </Card>
+    </Card>}
+      
     </div>
   )
 }

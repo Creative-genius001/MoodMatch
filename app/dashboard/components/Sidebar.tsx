@@ -50,7 +50,8 @@ const pathname = usePathname();
 
 
   return (
-    <div ref={sidebarRef} className={`w-64 h-screen transition-translate duration-500 ease-in-out fixed top-0 left-0 z-50 bg-dashboard-sidebar border-r border-border flex flex-col ${isMobile && (isSidebarOpen ? 'translate-x-0' : '-translate-x-full')}`}>
+    
+      <div ref={sidebarRef} className={`w-64 h-screen transition-translate duration-500 ease-in-out fixed top-0 left-0 z-50 bg-dashboard-sidebar border-r border-border flex flex-col ${isMobile && (isSidebarOpen ? 'translate-x-0' : '-translate-x-full')}`}>
       <div className="p-6 border-b border-border">
         <h1 className="text-xl font-bold text-foreground">Moodmatch AI</h1>
         <p className="text-sm text-muted-foreground">Best AI playlist generator</p>
@@ -85,6 +86,7 @@ const pathname = usePathname();
         </div>
       </div> */}
     </div>
+    
   );
 }
 
