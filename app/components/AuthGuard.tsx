@@ -21,6 +21,7 @@ const AuthGuard = ({ children }: Props) => {
       if (local && local.refresh_token) {
         setIsAuthenticated(true);
       } else {
+        alert('Connect your spotify account!')
         setIsAuthenticated(false);
         router.replace("/");
       }
